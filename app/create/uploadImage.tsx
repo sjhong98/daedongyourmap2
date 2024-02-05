@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getDownloadURL, getMetadata, getStorage, ref, uploadBytes } from 'firebase/storage';
-import { firebaseConfig } from './config';
+import { firebaseConfig } from '../../firestore/config';
 
 
 export function UploadImage(file:any, idToken:string, documentId:string) {
@@ -31,7 +31,5 @@ export function UploadImage(file:any, idToken:string, documentId:string) {
                 body: JSON.stringify(data)
             })
         })
-
-        
     })
 }

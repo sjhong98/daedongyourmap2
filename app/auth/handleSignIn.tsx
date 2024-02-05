@@ -1,6 +1,6 @@
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "./config";
+import { firebaseConfig } from "../../firestore/config";
 import { Dispatch, SetStateAction } from 'react';
 import { UserDataType } from '@/app/auth/signIn';
 

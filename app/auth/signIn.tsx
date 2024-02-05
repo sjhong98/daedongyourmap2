@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { handleSignIn } from "@/firestore/signIn";
+import { handleSignIn } from "@/app/auth/handleSignIn";
 import { useRouter } from "next/navigation";
 import { RecoilRoot, useSetRecoilState } from "recoil";
 import { idTokenStore } from "../recoilContextProvider";

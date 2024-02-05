@@ -7,3 +7,12 @@ body {
   color: white;
   background-color: #003545;
 }
+
+.map-elem {
+  transition: filter 0.3s ease;
+  filter: invert(100%);
+}
+
+.map-elem:hover {
+  filter: invert(0%);
+}

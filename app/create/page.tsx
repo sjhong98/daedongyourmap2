@@ -2,19 +2,19 @@
 
 import { useState } from "react";
 import UploadFile from "../board/uploadFile";
-import { UploadPost } from "@/firestore/uploadPost";
+import { UploadPost } from "@/app/create/uploadPost";
 import { useRecoilValue } from "recoil";
 import { idTokenStore } from "../recoilContextProvider";
-import { UploadImage } from "@/firestore/uploadImage";
+import { UploadImage } from "@/app/create/uploadImage";
 
 export default function Create() {
     const [image, setImage] = useState<any>();
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
-    const [documentId, setDocumentId] = useState<string>("");
     const idToken = useRecoilValue(idTokenStore);
 
     const handleUploadPost = () => {
+        // 게시물 저장 path 가져와 cloud path로 사용
         UploadPost({title, content, idToken})
         .then((res) => {
             UploadImage(image, idToken, res.name);

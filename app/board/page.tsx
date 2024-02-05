@@ -4,7 +4,7 @@ import test from '@/public/test.jpg';
 
 import { useState } from "react"
 import { idTokenStore } from "../recoilContextProvider";
-import { UploadImage } from '@/firestore/uploadImage';
+import { UploadImage } from '@/app/create/uploadImage';
 import { useRecoilValue } from 'recoil';
 
 export default function Board() {
