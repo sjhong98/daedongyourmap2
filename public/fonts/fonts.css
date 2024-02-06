@@ -1,0 +1,41 @@
+@font-face {
+    font-family: 'nnb';
+    font-style: normal;
+    font-weight: 700;
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.eot');
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.ttf') format('truetype')
+   }
+
+@font-face {
+    font-family: 'nnn';
+    font-style: normal;
+    font-weight: 300;
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.eot');
+    src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.ttf') format('truetype');
+   }
+
+@font-face {
+    font-family: 'lmb';
+    src: url('./LEMONMILK-Bold.otf');
+}
+
+@font-face {
+    font-family: 'lml';
+    src: url('./LEMONMILK-Light.otf');
+}
+
+.lmb {
+    font-family: lmb;
+}
+
+.lml {
+    font-family: lml;
+}
+
+.nnb {
+    font-family: 'nnb';
+}
+
+.nnn {
+    font-family: 'nnn';
+}

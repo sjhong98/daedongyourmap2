@@ -36,13 +36,19 @@ export default function Map() {
         router.push(`/${e.target.alt}`)
     }
 
-    window.addEventListener('mousemove', (event) => {
+    const handleOver = () => {
+        if(window !== undefined) {
+            window.addEventListener('mousemove', onMouseMove);
+        }
+    }
+    
+    const onMouseMove = (event:any) => {
         setCursorX(pivotX - event.clientX);
         setCursorY(pivotY - event.clientY);
-    })
+    }
 
     return (
-        <MovingMap x={cursorX*0.1} y={cursorY*0.4} className='flex justify-center items-center w-[300px] h-[200px]'>
+        <MovingMap x={cursorX*0.1} y={cursorY*0.4} onMouseOver={handleOver} className='flex justify-center items-center w-[300px] h-[200px]'>
             <Image src={bg} alt='bg' className=' absolute invert mt-[450px] ml-[300px] rotate-[-2deg] z-[1] scale-[4.5]' />
             <Image src={ic} alt="incheon" onClick={handleClick} width={22} className='map-elem mb-[40px] mr-[160px] z-[100]' />
             <Image src={ic2} alt="incheon" onClick={handleClick} width={24} className='map-elem mb-[-32px] ml-[-150px] z-[100]' />

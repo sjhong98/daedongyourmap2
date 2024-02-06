@@ -1,7 +1,4 @@
-import Image from 'next/image'
-import SignIn from './auth/signIn'
-import Map from './components/map'
-import MapLayout from './mapLayout'
+import MapLayout from './components/mapLayout'
 
 export default function Home() {
   return (

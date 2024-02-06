@@ -1,10 +1,10 @@
-import Map from "./components/map";
+import Map from "./map";
 
 
 export default function MapLayout() {
 
     return (
-        <div className='mr-[22vw]'>
+        <div className=''>
             <Map /> 
         </div>
     )

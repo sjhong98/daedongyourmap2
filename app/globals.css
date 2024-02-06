@@ -9,10 +9,73 @@ body {
 }
 
 .map-elem {
-  transition: filter 0.3s ease;
+  transition: 0.3s ease;
   filter: invert(100%);
+  cursor: pointer;
 }
 
 .map-elem:hover {
-  filter: invert(0%);
+  filter: invert(20%);
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+@font-face {
+  font-family: 'nnb';
+  font-style: normal;
+  font-weight: 700;
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.eot');
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.ttf') format('truetype')
+ }
+
+@font-face {
+  font-family: 'nnn';
+  font-style: normal;
+  font-weight: 300;
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.eot');
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.ttf') format('truetype');
+ }
+
+.nnb {
+  font-family: 'nnb';
+}
+
+.nnn {
+  font-family: 'nnn';
+}
+
+@font-face {
+  font-family: 'lml';
+  src: url('../assets/fonts/LEMONMILK-Light.otf');
+}
+
+.lml {
+  font-family: 'lml';
+}
+
+@font-face {
+  font-family: 'lmb';
+  src: url('../assets/fonts/LEMONMILK-Bold.otf');
+}
+
+.lmb {
+  font-family: 'lmb';
+}
+
+@font-face {
+  font-family: 'co';
+  src: url('../assets/fonts/CameraObscuraDEMO.otf');
+}
+
+.co {
+  font-family: 'co';
+}
+
+.mc {
+  color: #003545;
 }

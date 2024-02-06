@@ -2,7 +2,7 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import RecoilContextProvider from './recoilContextProvider'
-import Header from './components/header'
+import Header from './components/header/header'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,13 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Header />
-        <div className='flex flex-col justify-center items-center pt-[20vh]'>
-          <RecoilContextProvider>
-            {children}
-          </RecoilContextProvider>
-        </div>
-        </body>
+        <RecoilContextProvider>
+          <Header />
+          <div className='flex flex-col justify-center items-center pt-[20vh]'>
+              {children}
+          </div>
+        </RecoilContextProvider>
+      </body>
     </html>
   )
 }
