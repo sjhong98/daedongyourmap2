@@ -18,6 +18,7 @@ export default function Input(props:propsType) {
             onChange={(e)=>props.setState(e.target.value)} 
             value={props.state}
             type={props.type ? props.type : "text"}
+            className='border-b-2 mc mb-4'
         />
     )
 }
@@ -25,11 +26,9 @@ export default function Input(props:propsType) {
 const InputComponent = styled.input`
     &:focus {
         outline: none;
+        border-bottom: solid 2.5px #003545;
     }
     &::placeholder {
         color: #003545;
     }
-    color:#003545;
-    border-bottom: solid 2.5px #003545;
-
 `

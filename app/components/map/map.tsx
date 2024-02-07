@@ -19,12 +19,16 @@ import jn from '@/public/map/jn.png';
 import jb from '@/public/map/jb.png'; 
 import bg from '@/public/map/bg.png';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 
+interface propsType{
+    setState?: Dispatch<SetStateAction<string>>
+}
+
 // ssr로 히트맵 정보 받기
-export default function Map() {
+export default function Map(props:propsType) {
     const router = useRouter();
     const [cursorX, setCursorX] = useState(0);
     const [cursorY, setCursorY] = useState(0);
@@ -33,7 +37,7 @@ export default function Map() {
     // const [selectedIndex, setSelectedIndex] = useState("");
 
     const handleClick = (e:any) => {
-        router.push(`/${e.target.alt}`)
+        router.push(`/${e.target.alt}`);
     }
 
     const handleOver = () => {
@@ -48,8 +52,8 @@ export default function Map() {
     }
 
     return (
-        <MovingMap x={cursorX*0.1} y={cursorY*0.4} onMouseOver={handleOver} className='flex justify-center items-center w-[300px] h-[200px]'>
-            <Image src={bg} alt='bg' className=' absolute invert mt-[450px] ml-[300px] rotate-[-2deg] z-[1] scale-[4.5]' />
+        <MovingMap x={cursorX*0.1} y={cursorY*0.2} onMouseOver={handleOver} className='flex justify-center items-center w-[300px] h-[200px]'>
+            <Image src={bg} alt='bg' className=' absolute mt-[450px] ml-[300px] rotate-[-2deg] z-[1] scale-[4.5]' />
             <Image src={ic} alt="incheon" onClick={handleClick} width={22} className='map-elem mb-[40px] mr-[160px] z-[100]' />
             <Image src={ic2} alt="incheon" onClick={handleClick} width={24} className='map-elem mb-[-32px] ml-[-150px] z-[100]' />
             <Image src={gg} alt="gyeonggi" onClick={handleClick} width={160} className='map-elem ml-[-31px] z-[80]' />
@@ -74,6 +78,6 @@ export default function Map() {
 
 const MovingMap = styled.div<{x:number, y:number}>`
     transform: translate(${(props) => props.x}px, ${(props) => props.y}px);
-    scale: 1.8;
+    scale: 1.4;
 
 `

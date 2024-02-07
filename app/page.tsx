@@ -1,4 +1,4 @@
-import MapLayout from './components/mapLayout'
+import MapLayout from './components/map/mapLayout'
 
 export default function Home() {
   return (

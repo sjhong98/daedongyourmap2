@@ -2,29 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-body {
-  color: white;
-  background-color: #003545;
-}
-
-.map-elem {
-  transition: 0.3s ease;
-  filter: invert(100%);
-  cursor: pointer;
-}
-
-.map-elem:hover {
-  filter: invert(20%);
-}
-
-.center {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 @font-face {
   font-family: 'nnb';
   font-style: normal;
@@ -76,6 +53,33 @@ body {
   font-family: 'co';
 }
 
+
+body {
+  color: white;
+  background-color: #003545;
+}
+
+.map-elem {
+  transition: 0.3s ease;
+  filter: invert(0%);
+  cursor: pointer;
+}
+
+.map-elem:hover {
+  filter: invert(100%);
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .mc {
   color: #003545;
+}
+
+p, pre, a{
+  color: black;
 }
