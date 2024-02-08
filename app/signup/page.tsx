@@ -6,7 +6,8 @@ import Logo from '@/public/daedong.png';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { initializeApp } from "firebase/app";
-import { Button, styled } from "@mui/material";
+import { Button } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { firebaseConfig } from "@/firestore/config";
 import { createUserWithEmailAndPassword, getAuth, sendEmailVerification } from "firebase/auth";
 

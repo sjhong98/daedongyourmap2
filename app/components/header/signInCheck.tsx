@@ -1,9 +1,10 @@
 "use client";
 
 import { firebaseConfig } from "@/firestore/config";
-import { Button, styled } from "@mui/material";
+import { Button } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -22,7 +23,7 @@ export default function SignInCheck() {
             if(user) {
                 console.log("로그인 상태");
                 localStorage.setItem('ddym-isLogin', 'true');
-                setIsLogin(false);
+                setIsLogin(true);
             } else {
                 console.log("로그아웃 상태");
                 localStorage.setItem('ddym-isLogin', 'false');
@@ -33,8 +34,7 @@ export default function SignInCheck() {
 
     return (
         <div>
-        { isLogin ? <></> : <LoginBtn variant="text" onClick={handleBtnClick} >Sign In</ LoginBtn> }
-        {/* 로그인 시 프로필 띄우기 */}
+        { isLogin ? <button onClick={()=>signOut(getAuth())}>Sign Out</button> : <LoginBtn variant="text" onClick={handleBtnClick} >Sign In</ LoginBtn> }
         </div>
     )
 }

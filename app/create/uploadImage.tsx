@@ -1,35 +1,44 @@
+'use client';
+
 import { initializeApp } from 'firebase/app';
-import { getDownloadURL, getMetadata, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { firebaseConfig } from '../../firestore/config';
 
-
-export function UploadImage(file:any, idToken:string, documentId:string) {
+export function UploadImage(file:any, idToken:string, documentId:string, selectedPoint:string, routerToMain:(point:string)=>void) {
     initializeApp(firebaseConfig);
+    let fullPath:string;
     const storage = getStorage();
-    console.log(documentId);
-    const storageRef = ref(storage, documentId);
-    uploadBytes(storageRef, file)
-    .then((snapshot) => {
-        console.log(snapshot);
-        const fullPath = snapshot.metadata.fullPath;
-        getDownloadURL(ref(storage, fullPath))
-        .then((res) => {
-            const data = {
-                fields: {
-                    photo: {
-                        stringValue: res
-                    },
+    let storageRef;
+
+    for(let i=0; i<file.length; i++) {
+        let imageId = `${documentId}-${i}`;
+        storageRef = ref(storage, imageId);
+        uploadBytes(storageRef, file[i])
+        .then((snapshot) => {
+            fullPath = snapshot.metadata.fullPath
+            getDownloadURL(ref(storage, fullPath))
+            .then((res) => {
+                let temp = [];
+                for(let i=0; i<file.length; i++) {
+                    temp.push({ stringValue: res });
                 }
-            }
-            console.log("data : " , data);
-            // DownloadURL을 fireStore에 저장
-            fetch(`https://firestore.googleapis.com/v1/${fullPath}?updateMask.fieldPaths=photo`, {
-                method: 'PATCH',
-                headers: {
-                    "Authorization": `Bearer ${idToken}`
-                },
-                body: JSON.stringify(data)
+                let data = {fields: {photo: { arrayValue: { values: temp } } } }
+                // DownloadURL을 fireStore에 저장
+                let url = fullPath.slice(0, -2);
+                fetch(`https://firestore.googleapis.com/v1/${url}?updateMask.fieldPaths=photo`, {
+                    method: 'PATCH',
+                    headers: {
+                        "Authorization": `Bearer ${idToken}`
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then((res) => {
+                    routerToMain(selectedPoint);
+                })
+                .catch((err)=>
+                    console.log(err)
+                );
             })
         })
-    })
+    }
 }

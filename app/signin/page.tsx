@@ -4,10 +4,11 @@ import Image from "next/image";
 import Input from "../modules/input";
 import Logo from '@/public/daedong.png';
 import { useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { useRouter } from "next/navigation";
-import { Button, styled } from "@mui/material";
-import { userDataStore } from "../recoilContextProvider";
+import { Button } from "@mui/material";
+import { styled } from '@mui/material/styles';
+import { idTokenStore, userDataStore } from "../recoilContextProvider";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default function SignIn() {
@@ -15,6 +16,7 @@ export default function SignIn() {
     const [email, setEmail] = useState<string>("");
     const [pw, setPw] = useState<string>("");
     const [userData, setUserData] = useRecoilState(userDataStore);
+    const setIdToken = useSetRecoilState(idTokenStore);
     const [msg, setMsg] = useState<string>("");
 
     const handleSignIn = () => {
@@ -24,7 +26,7 @@ export default function SignIn() {
             signInWithEmailAndPassword(auth, email, pw)
             .then((res) => {
                 console.log("로그인 성공 : ", res);
-                if(res.user.emailVerified) {
+                if(!res.user.emailVerified) { // ******
                     res.user.getIdToken(true)
                     .then((token => {
                         idToken = token;
@@ -37,6 +39,9 @@ export default function SignIn() {
                             displayName: res.user.displayName,
                         }
                         setUserData(temp);
+                        setIdToken(idToken);
+                        localStorage.setItem('ddym-email', email);
+                        // router.push('/');
                         router.push('/');
                     }));
                 } else 

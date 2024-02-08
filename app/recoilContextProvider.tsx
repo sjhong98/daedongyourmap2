@@ -12,6 +12,17 @@ export interface UserDataType{
     displayName: string | null
 }
 
+export interface PostType {
+    createTime:string
+    content:string,
+    title:string,
+    point:string,
+    photo:Array<any>,
+    user:string,
+    comments:Array<any>,
+    name:string
+}
+
 export const idTokenStore = atom<string>({
     key:'idTokenStore',
     default: ""
@@ -20,6 +31,21 @@ export const idTokenStore = atom<string>({
 export const userDataStore = atom<UserDataType | null>({
     key:'userDataStore',
     default: null
+})
+
+export const selectedPointStore = atom<string>({
+    key:'selectedPointStore',
+    default: "",
+})
+
+export const curPostStore = atom<PostType | null>({
+    key:'curPostStore',
+    default: null
+})
+
+export const isPostViewOpenStore = atom<boolean>({
+    key:'isPostViewOpen',
+    default:false
 })
 
 export default function RecoilContextProvider({children}: {children:React.ReactNode}) {
