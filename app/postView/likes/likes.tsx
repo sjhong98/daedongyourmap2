@@ -1,34 +1,26 @@
-'use client';
-
 import { PostType } from "@/app/recoilContextProvider";
 import { firebaseConfig } from "@/firestore/config";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { Dispatch } from "react";
 
-export async function UploadComment(post:PostType, idToken:string, comment:string, comments:any, setComments:Dispatch<any>) {
+export async function Likes(post:PostType, idToken:string, likes:any, setLikes:Dispatch<any>) {
     initializeApp(firebaseConfig);
     const auth = getAuth();
     let temp:any[] = [];
-    if(comments.length !== 0) {
-        temp = [...comments];
+    if(likes.length !== 0) {
+        temp = [...likes];
     }
-    temp.push({ mapValue : 
-        { fields : 
-            {
-                user: { stringValue : auth.currentUser && auth.currentUser.email },
-                comment: { stringValue : comment }
-            }
-        }
-    })
-    const res = fetch(`https://firestore.googleapis.com/v1/${post.name}?updateMask.fieldPaths=comments`, {
+    temp.push( { stringValue : auth.currentUser && auth.currentUser.email })
+    console.log(temp);
+    const res = fetch(`https://firestore.googleapis.com/v1/${post.name}?updateMask.fieldPaths=likes`, {
         method: 'PATCH',
         headers: {
             "Authorization": `Bearer ${idToken}`
         },
         body: JSON.stringify({
             fields: {
-                comments: {
+                likes: {
                     arrayValue: {
                         values: temp 
                     }
@@ -36,6 +28,6 @@ export async function UploadComment(post:PostType, idToken:string, comment:strin
             }
         })
     })
-    setComments(temp);
+    setLikes(temp);
     return (await res).json();
 }

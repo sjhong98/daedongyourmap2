@@ -20,8 +20,14 @@ export interface PostType {
     photo:Array<any>,
     user:string,
     comments:Array<any>,
-    name:string
+    name:string,
+    likes:Array<any>
 }
+
+export const curComments = atom<any>({
+    key:'curComments',
+    default: "",
+})
 
 export const idTokenStore = atom<string>({
     key:'idTokenStore',

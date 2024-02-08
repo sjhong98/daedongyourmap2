@@ -22,6 +22,7 @@ export default async function Board(props: Props) {
             user: item.fields.user.stringValue,
             comments: item.fields.comments.arrayValue.values,
             name: item.name,
+            likes: item.fields.likes.arrayValue.values,
         }
     })
 
