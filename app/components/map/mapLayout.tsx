@@ -8,7 +8,7 @@ import { swtichName } from "@/app/functions.tsx/switchName";
 
 export default function MapLayout() {
     const selectedPoint = useRecoilValue(selectedPointStore);
-    const [displayName, setDisplayName] = useState<string | undefined>("");
+    const [displayName, setDisplayName] = useState<string | undefined>(" ");
 
     useEffect(() => {
         setDisplayName(swtichName(selectedPoint));
@@ -16,8 +16,8 @@ export default function MapLayout() {
 
     return (
         <div className='flex'>
-            <div className="mr-[10vw] ml-[-10vw] mt-[20vh]">
-                <p className="nnn text-[3rem] text-white">{displayName}</p>
+            <div className="mr-[10vw] ml-[-10vw] mt-[20vh] w-[10vw]">
+                <pre className="nnn text-[3rem] text-white">{displayName}</pre>
             </div>
             <Map /> 
         </div>
