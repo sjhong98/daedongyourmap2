@@ -5,16 +5,17 @@ import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { initializeApp } from "firebase/app";
 import { styled } from "@mui/material/styles";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { firebaseConfig } from "@/firestore/config";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { idTokenStore, isLoginStore } from "@/app/recoilContextProvider";
+import { idTokenStore, isLoginStore, profileStore } from "@/app/recoilContextProvider";
 
 export default function SignInCheck() {
     const router = useRouter();
     const [isLogin, setIsLogin] = useRecoilState(isLoginStore);
     const setIdToken = useSetRecoilState(idTokenStore);
     const email = localStorage.getItem('ddym-email');
+    const setProfile = useSetRecoilState(profileStore);
     initializeApp(firebaseConfig);
     
     const handleBtnClick = () => {
@@ -29,10 +30,11 @@ export default function SignInCheck() {
     // }
 
     const handleClickProfile = () => {
-        
+        router.push('/profile');
     }
 
     useEffect(() => {
+        // idToken 갱신
         const refreshCount = async () => {
             const refreshToken = localStorage.getItem('ddym-refresh-token');
             const res = fetch(`https://securetoken.googleapis.com/v1/token?key=AIzaSyCA6Q_TA6dyl7wf2BtR_V_oEVIW2_Q94y0`, {
@@ -46,8 +48,20 @@ export default function SignInCheck() {
             .then((res) => {
                 console.log("로그인 상태");
                 setIsLogin(true);
-                localStorage.setItem('ddym-refresh-token', res.refresh_token);
                 setIdToken(res.access_token);
+                const auth = getAuth();
+                auth.onAuthStateChanged((user) => {
+                    if(user) {
+                        let temp = {
+                            email: user.email,
+                            emailVerified: user.emailVerified,
+                            displayName: user.displayName,
+                            photoURL: user.photoURL
+                        }
+                        setProfile(temp);
+                    }
+                })
+                localStorage.setItem('ddym-refresh-token', res.refresh_token);
             })
         }
 

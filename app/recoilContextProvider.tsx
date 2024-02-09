@@ -24,7 +24,14 @@ export interface PostType {
     likes:Array<any>
 }
 
-export const profile = atom<any>({
+export interface ProfileType {
+    displayName: string | null,
+    email: string,
+    photoURL: string | null,
+    emailVerified: string
+}
+
+export const profileStore = atom<any>({
     key:'profile',
     default: {}
 })
