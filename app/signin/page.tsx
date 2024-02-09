@@ -4,21 +4,21 @@ import Image from "next/image";
 import Input from "../modules/input";
 import Logo from '@/public/daedong.png';
 import { useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { useRouter } from "next/navigation";
 import { Button } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { styled } from '@mui/material/styles';
-import { idTokenStore, userDataStore } from "../recoilContextProvider";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { refreshToken } from "firebase-admin/app";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { idTokenStore, isLoginStore, userDataStore } from "../recoilContextProvider";
 
 export default function SignIn() {
     const router = useRouter();
-    const [email, setEmail] = useState<string>("");
     const [pw, setPw] = useState<string>("");
-    const [userData, setUserData] = useRecoilState(userDataStore);
-    const setIdToken = useSetRecoilState(idTokenStore);
     const [msg, setMsg] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const setIsLogin = useRecoilValue(isLoginStore);
+    const setIdToken = useSetRecoilState(idTokenStore);
+    const [userData, setUserData] = useRecoilState(userDataStore);
 
     const handleSignIn = () => {
         if(email !== "" && pw !== "") {
@@ -27,7 +27,7 @@ export default function SignIn() {
             signInWithEmailAndPassword(auth, email, pw)
             .then((res) => {
                 console.log("로그인 성공 : ", res);
-                if(!res.user.emailVerified) { // ******
+                if(!res.user.emailVerified) { // ****** 일단 이메일 인증하지 않아도 되도록 해놓음
                     res.user.getIdToken(true)
                     .then((token => {
                         idToken = token;
@@ -41,9 +41,9 @@ export default function SignIn() {
                         }
                         setUserData(temp);
                         setIdToken(idToken);
+                        setIsLogin(true);
                         localStorage.setItem('ddym-email', email);
                         localStorage.setItem('ddym-refresh-token', res.user.refreshToken);
-                        // router.push('/');
                         router.push('/');
                     }));
                 } else 

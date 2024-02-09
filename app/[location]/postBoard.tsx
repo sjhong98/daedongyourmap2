@@ -1,25 +1,37 @@
 'use client';
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
-import { useSetRecoilState } from "recoil";
+import { fetchPost } from "./fetchPost";
+import { useEffect, useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { curPostStore, isPostViewOpenStore, PostType } from "../recoilContextProvider";
 
+
 export default function PostBoard( props:{data:PostType[], data2:any} ) {
-    const [posts, setPosts] = useState<PostType[]>(props.data);
-    const setPostViewOpen = useSetRecoilState(isPostViewOpenStore);
     const setCurPost = useSetRecoilState(curPostStore);
     const gridStyle = "grid grid-rows-3 grid-flow-col gap-1"
-
+    const [posts, setPosts] = useState<PostType[]>(props.data);
+    const [postViewOpen, setPostViewOpen] = useRecoilState(isPostViewOpenStore);
+    
+    // postView 열기
     const handleClickPost = (item:PostType) => {
         setCurPost(item);
-        setPostViewOpen(true)
+        setPostViewOpen(true);
     }
 
+    // postView 닫히면 post update
     useEffect(() => {
-        console.log(props.data2);
-    }, [])
+        const res = fetchPost();
+        res.then((res) => {
+            setPosts(res);
+        })
+    }, [postViewOpen])
+
+    // rough data log
+    // useEffect(() => {
+    //     console.log(props.data2);
+    // }, [])
 
     return (
         <div className={gridStyle}>

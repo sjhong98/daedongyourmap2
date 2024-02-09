@@ -1,86 +1,76 @@
 'use client';
 
 import Image from "next/image";
-import PostSlider from "./postSlider";
-import profile from '@/public/defaultProfilePic.jpeg';
-import { useEffect, useState } from "react";
-import { UploadComment } from "./comments/uploadComment";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { curPostStore, idTokenStore, isPostViewOpenStore, userDataStore } from "../recoilContextProvider";
-import FB from '@mui/icons-material/FavoriteBorder';
-import FI from '@mui/icons-material/Favorite';
-import { Likes } from "./likes/likes";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "@/firestore/config";
-import { getAuth } from "firebase/auth";
+import PostSlider from "../postSlider";
 import styled from "styled-components";
+import FI from '@mui/icons-material/Favorite';
+import FB from '@mui/icons-material/FavoriteBorder';
+import profile from '@/public/defaultProfilePic.jpeg';
+import { removeLike } from "./removeLike";
+import { uploadLike } from "./uploadLike";
+import { useEffect, useState } from "react";
+import { UploadComment } from "./uploadComment";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { curPostStore, idTokenStore, isPostViewOpenStore, userDataStore } from "../../recoilContextProvider";
+import { fetchPost } from "../fetchPost";
 
 export default function PostView() {
     const post = useRecoilValue(curPostStore);
-    const userData = useRecoilValue(userDataStore);
     const idToken = useRecoilValue(idTokenStore);
-    const [isOpen, setIsOpen] = useRecoilState(isPostViewOpenStore);
-    const [style, setStyle] = useState<string>("invisible");
-    const [comment, setComment] = useState<string>("");
-    const [comments, setComments] = useState<any>([]);
+    const userData = useRecoilValue(userDataStore);
     const [likes, setLikes] = useState<any>([]);
-    const [curEmail, setCurEmail] = useState<string>(" ");
+    const [comments, setComments] = useState<any>([]);
+    const [comment, setComment] = useState<string>("");
     const [didLike, setDidLike] = useState<boolean>(false);
+    const [style, setStyle] = useState<string>("invisible");
+    const [isOpen, setIsOpen] = useRecoilState(isPostViewOpenStore);
 
     useEffect(() => {
-        initializeApp(firebaseConfig);
-        const auth = getAuth();
-        if(auth.currentUser && auth.currentUser.email)
-            setCurEmail(auth.currentUser.email);
-    }, [])
-
-    useEffect(() => {
+        // DB 내용을 상태로 복사 -> 화면 반영
         if(post && post.comments !== undefined && post.likes !== undefined) {
             setComments([...post.comments]);
             setLikes([...post.likes]);
+        } else {
+            setComments([]);
+            setLikes([]);
         }
     }, [post])
 
     useEffect(() => {
-        console.log(likes, likes.find((item:any) => item.stringValue === curEmail), curEmail);
-
-            if(likes.find((item:any) => item.stringValue === curEmail) === undefined) 
-                setDidLike(false);
-            else 
-                setDidLike(true);
-        
+        // 내가 좋아요 표시한 게시물인지 확인
+        let curEmail = localStorage.getItem('ddym-email');
+        if(likes.find((item:any) => item.stringValue === curEmail) === undefined) 
+            setDidLike(false);
+        else 
+            setDidLike(true);
     }, [likes])
     
     useEffect(() => {
+        // postView modal 표시 & 없애기
         if(isOpen) setStyle("flex");
         else setStyle("invisible");
     }, [isOpen])
 
     const handleClickExit = (e:any) => {
-        if(e.target.id === 'outside-view')
+        // 바깥 영역 클릭시 모달 제거 -> post 갱신해야 함
+        if(e.target.id === 'outside-view') {
             setIsOpen(false);
+            fetchPost
+        }
     }
 
     const handleLikes = () => {
         if(post && likes !== "") {
-            // 나의 좋아요가 없는 경우
-            if(!didLike) {
-                Likes(post, idToken, likes, setLikes)
-                .then((res) => {
-                    console.log("좋아요 성공", res);
-                    setDidLike(true);
-                })
-                .catch((err) => {
-                    console.log("좋아요 실패", err);
-                })
-            } else {
-                setDidLike(true);
-            }
+            uploadLike(post, idToken, likes, setLikes)
+        } else {
+            setDidLike(true);
         }
     }
-    useEffect(() => {
-        console.log('didlikes : ', didLike)
-    }, [didLike])
+
+    const handleUnlikes = () => {
+        if(post) 
+            removeLike(post, idToken, likes, setLikes)
+    }
 
     const handleCommentInput = () => {
         if(post && comment !== "") {
@@ -144,13 +134,15 @@ export default function PostView() {
                         {/* 좋아요 */}
                         <div className="flex flex flex-1 mt-1">
                             { didLike ?
-                                <LikesAnim onClick={handleLikes}>
+                                // 이미 좋아요 표시한 경우
+                                <LikesAnim onClick={handleUnlikes}>
                                     <FI
                                         sx={{color:'red'}}
                                         className="w-4 mt-[-1vh] ml-3 cursor-pointer" 
                                     />
                                 </LikesAnim>
                                 :
+                                // 좋아요 표시하지 않은 경우
                                 <LikesAnim onClick={handleLikes}>
                                     <FB 
                                         sx={{color:'#000'}} 

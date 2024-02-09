@@ -1,22 +1,21 @@
 "use client";
 
-import { idTokenStore } from "@/app/recoilContextProvider";
-import { firebaseConfig } from "@/firestore/config";
+import { useEffect } from "react";
 import { Button } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { initializeApp } from "firebase/app";
-import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { initializeApp } from "firebase/app";
+import { styled } from "@mui/material/styles";
+import { getAuth, signOut } from "firebase/auth";
+import { firebaseConfig } from "@/firestore/config";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { idTokenStore, isLoginStore } from "@/app/recoilContextProvider";
 
 export default function SignInCheck() {
     const router = useRouter();
-    const [isLogin, setIsLogin] = useState<boolean>(false); 
+    const [isLogin, setIsLogin] = useRecoilState(isLoginStore);
     const setIdToken = useSetRecoilState(idTokenStore);
     initializeApp(firebaseConfig);
     
-
     const handleBtnClick = () => {
         router.push('/signin');
     }
