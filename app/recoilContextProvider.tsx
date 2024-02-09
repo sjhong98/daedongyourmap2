@@ -24,6 +24,11 @@ export interface PostType {
     likes:Array<any>
 }
 
+export const profile = atom<any>({
+    key:'profile',
+    default: {}
+})
+
 export const isLoginStore = atom<boolean>({
     key:'isLogin',
     default: false,

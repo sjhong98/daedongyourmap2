@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import PostSlider from "../postSlider";
+import PostSlider from "./postSlider";
 import styled from "styled-components";
 import FI from '@mui/icons-material/Favorite';
 import FB from '@mui/icons-material/FavoriteBorder';
@@ -18,7 +18,7 @@ export default function PostView() {
     const post = useRecoilValue(curPostStore);
     const idToken = useRecoilValue(idTokenStore);
     const userData = useRecoilValue(userDataStore);
-    const [likes, setLikes] = useState<any>([]);
+    const [likes, setLikes] = useState<any>([0]);
     const [comments, setComments] = useState<any>([]);
     const [comment, setComment] = useState<string>("");
     const [didLike, setDidLike] = useState<boolean>(false);
@@ -29,23 +29,22 @@ export default function PostView() {
         // DB 내용을 상태로 복사 -> 화면 반영
         if(post && post.comments !== undefined) {
             setComments([...post.comments]);
-        } else if(post && post.likes !== undefined) {
+        } else
+            setComments([0]);
+        // DB에 게시물이 있을 때 -> likes에 넣기 | 없을 때 -> undefined -> 빈 배열 넣기
+        if(post && post.likes !== undefined) {
             setLikes([...post.likes]);
-        } 
-        else {
-            setComments([]);
+        } else  
             setLikes([]);
-        }
     }, [post])
 
     useEffect(() => {
         // 내가 좋아요 표시한 게시물인지 확인
         let curEmail = localStorage.getItem('ddym-email');
-        console.log(curEmail, likes);
-        if(likes.find((item:any) => item.stringValue === curEmail) === undefined) 
-            setDidLike(false);
-        else 
+        if(likes.find((item:any) => item.stringValue === curEmail) !== undefined) 
             setDidLike(true);
+        else 
+            setDidLike(false);
     }, [likes])
     
     useEffect(() => {
@@ -58,6 +57,9 @@ export default function PostView() {
         // 바깥 영역 클릭시 모달 제거 -> post 갱신해야 함
         if(e.target.id === 'outside-view') {
             setIsOpen(false);
+            // 나가면서 값 갱신함으로써 useEffect 의존성 활성화되도록 함
+            setComments([0]);
+            setLikes([0]);
             fetchPost
         }
     }

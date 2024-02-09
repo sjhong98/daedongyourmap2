@@ -14,17 +14,22 @@ export default function SignInCheck() {
     const router = useRouter();
     const [isLogin, setIsLogin] = useRecoilState(isLoginStore);
     const setIdToken = useSetRecoilState(idTokenStore);
+    const email = localStorage.getItem('ddym-email');
     initializeApp(firebaseConfig);
     
     const handleBtnClick = () => {
         router.push('/signin');
     }
 
-    const handleSignOut = () => {
-        console.log("로그아웃");
-        signOut(getAuth());
-        setIsLogin(false);
-        localStorage.setItem('ddym-refresh-token', "none");
+    // const handleSignOut = () => {
+    //     console.log("로그아웃");
+    //     signOut(getAuth());
+    //     setIsLogin(false);
+    //     localStorage.setItem('ddym-refresh-token', "none");
+    // }
+
+    const handleClickProfile = () => {
+        
     }
 
     useEffect(() => {
@@ -57,7 +62,11 @@ export default function SignInCheck() {
 
     return (
         <div>
-        { isLogin ? <button onClick={handleSignOut}>Sign Out</button> : <LoginBtn variant="text" onClick={handleBtnClick} >Sign In</ LoginBtn> }
+        { isLogin ? 
+            <button onClick={handleClickProfile}>{email}</button> 
+            : 
+            <LoginBtn variant="text" onClick={handleBtnClick} >Sign In</ LoginBtn> 
+        }
         </div>
     )
 }

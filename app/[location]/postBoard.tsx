@@ -7,10 +7,9 @@ import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { curPostStore, isPostViewOpenStore, PostType } from "../recoilContextProvider";
 
-
 export default function PostBoard( props:{data:PostType[], data2:any} ) {
     const setCurPost = useSetRecoilState(curPostStore);
-    const gridStyle = "grid grid-rows-3 grid-flow-col gap-1"
+    const gridStyle = "grid grid-cols-3 gap-1"
     const [posts, setPosts] = useState<PostType[]>(props.data);
     const [postViewOpen, setPostViewOpen] = useRecoilState(isPostViewOpenStore);
     

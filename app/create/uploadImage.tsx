@@ -11,22 +11,21 @@ export function UploadImage(file:any, idToken:string, documentId:string, selecte
     let storageRef;
     let temp:any[] = [];
 
-    for(let i=0; i<file.length; i++) {
-        let imageId = `${documentId}-${i}`;
+    file.map((item:any, index:number) => {
+        let imageId = `${documentId}-${index}`;
         storageRef = ref(storage, imageId);
-        uploadBytes(storageRef, file[i])
+        uploadBytes(storageRef, item)
         .then((snapshot) => {
             fullPath = snapshot.metadata.fullPath
             getDownloadURL(ref(storage, fullPath))
             .then((res) => {
                 temp.push({ stringValue: res });
-                if(i === file.length) {
-                    let data = { fields: { photo: { arrayValue: { values: temp } } } }
-                    patchURL(fullPath, idToken, selectedPoint, routerToMain, data);
-                }
+                let data = { fields: { photo: { arrayValue: { values: temp } } } }
+                patchURL(fullPath, idToken, selectedPoint, routerToMain, data);
             })
         })
-    }
+    })
+        
 }
 
 const patchURL = (fullPath:string, idToken:string, selectedPoint:string, routerToMain:(point:string)=>void, data:any) => {
