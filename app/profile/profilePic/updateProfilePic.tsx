@@ -19,7 +19,7 @@ export const updateProfilePic = (file:any, setImage:Dispatch<any>) => {
                 .then((res) => {
                     updateProfile(user, {
                         photoURL: res
-                    }).then((res) => {
+                    }).then(() => {
                         console.log("profile pic changed");
                     }).catch((err) => {
                         console.log(err);

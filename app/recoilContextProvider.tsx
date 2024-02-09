@@ -28,7 +28,7 @@ export interface ProfileType {
     displayName: string | null,
     email: string,
     photoURL: string | null,
-    emailVerified: string
+    emailVerified: boolean
 }
 
 export const profileStore = atom<any>({

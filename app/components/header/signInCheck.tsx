@@ -1,21 +1,25 @@
 "use client";
 
-import { useEffect } from "react";
+import Image from "next/image";
+import profilePic from '@/public/defaultProfilePic.jpeg';
 import { Button } from "@mui/material";
+import { getAuth } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { styled } from "@mui/material/styles";
-import { getAuth } from "firebase/auth";
 import { firebaseConfig } from "@/firestore/config";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { idTokenStore, isLoginStore, profileStore } from "@/app/recoilContextProvider";
+import { ProfileType, idTokenStore, isLoginStore, profileStore } from "@/app/recoilContextProvider";
 
 export default function SignInCheck() {
     const router = useRouter();
-    const [isLogin, setIsLogin] = useRecoilState(isLoginStore);
-    const setIdToken = useSetRecoilState(idTokenStore);
     const email = localStorage.getItem('ddym-email');
-    const setProfile = useSetRecoilState(profileStore);
+    const setIdToken = useSetRecoilState(idTokenStore);
+    const [proPic, setProPic] = useState<any>("");
+    const [isLogin, setIsLogin] = useRecoilState(isLoginStore);
+    const [displayName, setDisplayName] = useState<string>("");
+    const [profile, setProfile] = useRecoilState<ProfileType>(profileStore);
     initializeApp(firebaseConfig);
     
     const handleBtnClick = () => {
@@ -51,7 +55,7 @@ export default function SignInCheck() {
                 setIdToken(res.access_token);
                 const auth = getAuth();
                 auth.onAuthStateChanged((user) => {
-                    if(user) {
+                    if(user && user.email) {
                         let temp = {
                             email: user.email,
                             emailVerified: user.emailVerified,
@@ -74,10 +78,28 @@ export default function SignInCheck() {
         }
     }, [])
 
+    useEffect(() => {
+        console.log(profile);
+        if(profile.photoURL) setProPic(profile.photoURL);
+        else setProPic(profilePic);
+
+        if(profile.displayName) setDisplayName(profile.displayName);
+        else if(email) setDisplayName(email);
+    }, [profile])
+
     return (
         <div>
         { isLogin ? 
-            <button onClick={handleClickProfile}>{email}</button> 
+            <div className="flex">
+                <Image 
+                    src={proPic} 
+                    width={50} 
+                    height={50} 
+                    alt="profile" 
+                    className="rounded-full object-cover aspect-square mr-2" 
+                />
+                <button onClick={handleClickProfile}>{displayName}</button> 
+            </div>
             : 
             <LoginBtn variant="text" onClick={handleBtnClick} >Sign In</ LoginBtn> 
         }
