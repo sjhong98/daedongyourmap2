@@ -10,6 +10,7 @@ import { Button } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { idTokenStore, userDataStore } from "../recoilContextProvider";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { refreshToken } from "firebase-admin/app";
 
 export default function SignIn() {
     const router = useRouter();
@@ -41,6 +42,7 @@ export default function SignIn() {
                         setUserData(temp);
                         setIdToken(idToken);
                         localStorage.setItem('ddym-email', email);
+                        localStorage.setItem('ddym-refresh-token', res.user.refreshToken);
                         // router.push('/');
                         router.push('/');
                     }));
