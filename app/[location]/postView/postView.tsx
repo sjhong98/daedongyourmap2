@@ -27,10 +27,12 @@ export default function PostView() {
 
     useEffect(() => {
         // DB 내용을 상태로 복사 -> 화면 반영
-        if(post && post.comments !== undefined && post.likes !== undefined) {
+        if(post && post.comments !== undefined) {
             setComments([...post.comments]);
+        } else if(post && post.likes !== undefined) {
             setLikes([...post.likes]);
-        } else {
+        } 
+        else {
             setComments([]);
             setLikes([]);
         }
@@ -39,6 +41,7 @@ export default function PostView() {
     useEffect(() => {
         // 내가 좋아요 표시한 게시물인지 확인
         let curEmail = localStorage.getItem('ddym-email');
+        console.log(curEmail, likes);
         if(likes.find((item:any) => item.stringValue === curEmail) === undefined) 
             setDidLike(false);
         else 

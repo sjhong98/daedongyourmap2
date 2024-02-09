@@ -16,7 +16,7 @@ export default function SignIn() {
     const [pw, setPw] = useState<string>("");
     const [msg, setMsg] = useState<string>("");
     const [email, setEmail] = useState<string>("");
-    const setIsLogin = useRecoilValue(isLoginStore);
+    const setIsLogin = useSetRecoilState(isLoginStore);
     const setIdToken = useSetRecoilState(idTokenStore);
     const [userData, setUserData] = useRecoilState(userDataStore);
 
@@ -44,7 +44,7 @@ export default function SignIn() {
                         setIsLogin(true);
                         localStorage.setItem('ddym-email', email);
                         localStorage.setItem('ddym-refresh-token', res.user.refreshToken);
-                        router.push('/');
+                        router.push('/create');
                     }));
                 } else 
                     setMsg("이메일 인증을 완료하세요");

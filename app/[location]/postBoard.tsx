@@ -25,13 +25,9 @@ export default function PostBoard( props:{data:PostType[], data2:any} ) {
         const res = fetchPost();
         res.then((res) => {
             setPosts(res);
+            console.log("post updated", res);
         })
     }, [postViewOpen])
-
-    // rough data log
-    // useEffect(() => {
-    //     console.log(props.data2);
-    // }, [])
 
     return (
         <div className={gridStyle}>
@@ -45,7 +41,7 @@ export default function PostBoard( props:{data:PostType[], data2:any} ) {
                 <p className="absolute text-white nnn opacity-0 z-[100]">{item.title}</p>
                 <div>
                     <Image 
-                        src={item.photo[0].stringValue} 
+                        src={item.photo!==undefined && item.photo[0].stringValue} 
                         alt={item.title} 
                         width={400} 
                         height={400} 

@@ -23,7 +23,7 @@ export default function SignInCheck() {
     const handleSignOut = () => {
         console.log("로그아웃");
         signOut(getAuth());
-        setIsLogin(true);
+        setIsLogin(false);
         localStorage.setItem('ddym-refresh-token', "none");
     }
 
