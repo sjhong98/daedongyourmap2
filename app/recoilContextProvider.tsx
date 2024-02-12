@@ -21,7 +21,7 @@ export interface PostType {
     user:string,
     comments:Array<any>,
     name:string,
-    likes:Array<any>
+    likes:Array<any>,
 }
 
 export interface ProfileType {

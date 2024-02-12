@@ -1,7 +1,7 @@
-import { swtichName } from "../functions.tsx/switchName";
 import PostBoard from "./postBoard"
-import { fetchPost } from "./fetchPost";
 import PostView from "./postView/postView";
+import { fetchPost } from "./fetchPost";
+import { swtichName } from "../functions.tsx/switchName";
 
 type Props = {
     params: { location: string };
@@ -9,13 +9,14 @@ type Props = {
 };
 
 export default async function Board(props: Props) {
-    let displayName = swtichName(props.params.location);
-    const data = await fetchPost();
+    const location = props.params.location;
+    let displayName = swtichName(location);
+    let data = await fetchPost(location);
 
     return (    
         <div className="flex flex-col items-center">
             <p className="text-white text-[2rem] mb-6 nnb">{ displayName }</p>
-            <PostBoard data={data} data2={data} />
+            <PostBoard data={data} data2={data} location={location} />
             <PostView /> 
         </div>
     )

@@ -9,7 +9,9 @@ import { initializeApp } from "firebase/app";
 import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { firebaseConfig } from "@/firestore/config";
-import { createUserWithEmailAndPassword, getAuth, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, updateProfile } from "firebase/auth";
+import { useRecoilValue } from "recoil";
+import { idTokenStore } from "../recoilContextProvider";
 
 export default function SignUp() {
     const router = useRouter();
@@ -18,17 +20,48 @@ export default function SignUp() {
     const [nickname, setNickname] = useState<string>("");
     const [msg, setMsg] = useState<string>("");
 
-    const handleBtnClick = () => {
+    const handleBtnClick = async () => {
         if(pw.length < 8) {
             setMsg("비밀번호는 8자 이상이어야 합니다");
         } else if(email !== "" && pw !== "" && nickname !== "") {
             initializeApp(firebaseConfig)
             const auth = getAuth();
             createUserWithEmailAndPassword(auth, email, pw)
-                .then((uc) => {
-                    if(auth.currentUser)
+                .then(async (uc) => {
+                    if(auth.currentUser) {
                         sendEmailVerification(auth.currentUser);
-                    router.push('/signup/verify');
+
+                        auth.onAuthStateChanged((user) => {
+                            if(user) {
+                                updateProfile(user, {
+                                    displayName: nickname
+                                })
+                            }
+                        })
+
+                        const idToken = auth.currentUser.getIdToken();
+                        console.log(idToken);
+
+                        const data = {
+                            fields: {
+                                displayName: {stringValue: nickname},
+                                follow: {arrayValue: {values: []}},
+                                follower: {arrayValue: {values: []}},
+                                photoURL: {stringValue: ""}
+                            }
+                        }
+
+                        const res = await fetch(`https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents/users?documentId=${email}`, {
+                            method: "POST",
+                            body: JSON.stringify(data)
+                        })
+                        const response = res.json()
+                        response
+                        .then((res) => {return res.name})
+                        .catch((err) => console.log("upload post err : ", err));
+
+                        router.push('/signup/verify');
+                    }
                 })
                 .catch((err) => {
                     if(err.code === "auth/email-already-in-use")

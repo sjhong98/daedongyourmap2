@@ -4,7 +4,7 @@ import { getAuth, updateProfile } from "firebase/auth";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { Dispatch } from "react";
 
-export const updateProfilePic = (file:any, setImage:Dispatch<any>) => {
+export const updateProfilePic = (file:any, setImage:Dispatch<any>, idToken:string, email:string) => {
     setImage(URL.createObjectURL(file));
     const auth = getAuth();
     auth.onAuthStateChanged((user) => {
@@ -23,6 +23,19 @@ export const updateProfilePic = (file:any, setImage:Dispatch<any>) => {
                         console.log("profile pic changed");
                     }).catch((err) => {
                         console.log(err);
+                    })
+                    fetch(`https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents/users/${email}?updateMask.fieldPaths=photoURL`, {
+                        method: 'PATCH',
+                        headers: {
+                            "Authorization": `Bearer ${idToken}`
+                        },
+                        body: JSON.stringify({
+                            fields: {
+                                photoURL: {
+                                    stringValue: res
+                                }
+                            }
+                        })
                     })
                 })
             })

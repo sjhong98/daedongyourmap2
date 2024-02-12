@@ -13,11 +13,21 @@ import { UploadComment } from "./uploadComment";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { curPostStore, idTokenStore, isPostViewOpenStore, userDataStore } from "../../recoilContextProvider";
 import { fetchPost } from "../fetchPost";
+import { getAuth } from "firebase/auth";
+import { getProfile } from "./getProfile";
+
+interface userInfo {
+    displayName: string,
+    photoURL: string,
+    follow: Array<string>,
+    follower: Array<string>
+}
 
 export default function PostView() {
     const post = useRecoilValue(curPostStore);
     const idToken = useRecoilValue(idTokenStore);
     const userData = useRecoilValue(userDataStore);
+    const [displayName, setDisplayName] = useState<string>("");
     const [likes, setLikes] = useState<any>([0]);
     const [comments, setComments] = useState<any>([]);
     const [comment, setComment] = useState<string>("");
@@ -26,16 +36,31 @@ export default function PostView() {
     const [isOpen, setIsOpen] = useRecoilState(isPostViewOpenStore);
 
     useEffect(() => {
-        // DB 내용을 상태로 복사 -> 화면 반영
-        if(post && post.comments !== undefined) {
-            setComments([...post.comments]);
-        } else
-            setComments([0]);
         // DB에 게시물이 있을 때 -> likes에 넣기 | 없을 때 -> undefined -> 빈 배열 넣기
         if(post && post.likes !== undefined) {
             setLikes([...post.likes]);
         } else  
             setLikes([]);
+
+        if(post && post.user !== undefined) {
+            getProfile(post.user)
+            .then((res) => {
+                if(res !== undefined && res.displayName !== "") setDisplayName(res.displayName);
+                else setDisplayName(post.user)
+            })
+            let temp = [...comments];
+            post.comments.map((item:any, index:number) => {
+                console.log(item.user.mapValue.fields.user.stringValue);
+                if(item.user !== undefined && item.user.mapValue.fields.user.stringValue !== "") {
+                    getProfile(item.user.mapValue.fields.user.stringValue)
+                    .then((res) => {
+                        if(res !== undefined)
+                            temp[index].user = res.displayName;
+                    })
+                }
+            })
+            setComments(temp);
+        }
     }, [post])
 
     useEffect(() => {
@@ -90,6 +115,13 @@ export default function PostView() {
         }
     }
 
+    const fetchUserData = () => {
+        const auth = getAuth();
+        auth.onAuthStateChanged((user) => {
+
+        })
+    }
+
     return (
         <div 
             id="outside-view" 
@@ -108,7 +140,7 @@ export default function PostView() {
                         <div className="">
                             <div className="flex nnn">
                                 { userData?.photoURL === undefined ? <Image src={profile} alt="profile" className="rounded-full w-[1.5vw] mr-3 mt-1" /> : <></>}
-                                { userData?.displayName === undefined ? <p>{post?.user}</p> : <>{userData.displayName}</>}
+                                { userData?.displayName === undefined ? <p>{displayName}</p> : <>{userData.displayName}</>}
                             </div>
                             <div className="mt-1 ml-8">
                                 <p className="nnb">{post?.title}</p>

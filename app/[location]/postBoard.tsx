@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { curPostStore, isPostViewOpenStore, PostType } from "../recoilContextProvider";
 
-export default function PostBoard( props:{data:PostType[], data2:any} ) {
+export default function PostBoard( props:{data:PostType[], data2:any, location:string} ) {
     const setCurPost = useSetRecoilState(curPostStore);
     const gridStyle = "grid grid-cols-3 gap-1"
-    const [posts, setPosts] = useState<PostType[]>(props.data);
+    const [posts, setPosts] = useState<PostType[] | undefined>(props.data);
     const [postViewOpen, setPostViewOpen] = useRecoilState(isPostViewOpenStore);
     
     // postView 열기
@@ -21,7 +21,7 @@ export default function PostBoard( props:{data:PostType[], data2:any} ) {
 
     // postView 닫히면 post update
     useEffect(() => {
-        const res = fetchPost();
+        const res = fetchPost(props.location);
         res.then((res) => {
             setPosts(res);
             console.log("post updated", res);
@@ -30,7 +30,7 @@ export default function PostBoard( props:{data:PostType[], data2:any} ) {
 
     return (
         <div className={gridStyle}>
-        { posts.map((item:PostType, index:number) => {
+        { posts!==undefined && posts.map((item:PostType, index:number) => {
             return (
             <Wrapper 
                 key={index} 

@@ -3,7 +3,7 @@
 import { useRecoilValue } from "recoil";
 import { useEffect, useState } from "react";
 import ProfilePic from "@/app/profile/profilePic/profilePic";
-import { ProfileType, profileStore } from "@/app/recoilContextProvider";
+import { ProfileType, idTokenStore, profileStore } from "@/app/recoilContextProvider";
 import Input from "@/app/modules/input";
 import { getAuth, updateProfile } from "firebase/auth";
 
@@ -11,6 +11,8 @@ export default function Edit() {
     const profile = useRecoilValue<ProfileType>(profileStore);
     const [displayName, setDisplayName] = useState<string>("");
     const [activeBtn, setActiveBtn] = useState<boolean>(true);
+    const idToken = useRecoilValue(idTokenStore);
+    const email = localStorage.getItem('ddym-email');
 
     useEffect(() => {
         if(profile.displayName) setDisplayName(profile.displayName);
@@ -33,6 +35,21 @@ export default function Edit() {
                 }).catch((err) => {
                     console.log(err);
                 })
+                if(email) {
+                    fetch(`https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents/users/${email}?updateMask.fieldPaths=displayName`, {
+                        method: 'PATCH',
+                        headers: {
+                            "Authorization": `Bearer ${idToken}`
+                        },
+                        body: JSON.stringify({
+                            fields: {
+                                displayName: {
+                                    stringValue: displayName
+                                }
+                            }
+                        })
+                    })
+                }
             }
         })
     }

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import profilePic from '@/public/defaultProfilePic.jpeg';
 import { Button } from "@mui/material";
-import { getAuth } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
@@ -26,12 +26,12 @@ export default function SignInCheck() {
         router.push('/signin');
     }
 
-    // const handleSignOut = () => {
-    //     console.log("로그아웃");
-    //     signOut(getAuth());
-    //     setIsLogin(false);
-    //     localStorage.setItem('ddym-refresh-token', "none");
-    // }
+    const handleSignOut = () => {
+        console.log("로그아웃");
+        signOut(getAuth());
+        setIsLogin(false);
+        localStorage.setItem('ddym-refresh-token', "none");
+    }
 
     const handleClickProfile = () => {
         router.push('/profile');
@@ -99,6 +99,7 @@ export default function SignInCheck() {
                     className="rounded-full object-cover aspect-square mr-2" 
                 />
                 <button onClick={handleClickProfile}>{displayName}</button> 
+                <button onClick={handleSignOut} className="ml-3">Sign Out</button>
             </div>
             : 
             <LoginBtn variant="text" onClick={handleBtnClick} >Sign In</ LoginBtn> 

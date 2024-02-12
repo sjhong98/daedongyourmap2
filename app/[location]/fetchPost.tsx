@@ -1,12 +1,35 @@
-export const fetchPost = async () => {
-    const res = await fetch('https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents/posts', {
-        method: 'GET',
-        cache: 'no-cache'
+export const fetchPost = async (value?: string) => {
+    const response = await fetch('https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents:runQuery', {
+    method: 'POST',
+    cache: 'no-cache',
+    body: JSON.stringify({
+        "structuredQuery": {
+            "from": [{
+                "collectionId": "posts",
+            }],
+            "where": {
+                "fieldFilter": {
+                    "field": { "fieldPath": "point" },
+                    "op": "EQUAL",
+                    "value": { "stringValue": `${value}` }
+                }
+            },
+            "orderBy": [
+                {
+                  "field": { "fieldPath": "createTime" },
+                  "direction": "DESCENDING" 
+                }
+              ]
+        }
     })
-    .then((res) => res.json())
-    const data = res.documents;
-    const extract = data.map((item:any) => {
-        return {
+    });
+
+    const data = await response.json();
+
+    let extract: any[] = [];
+    data.map((elem: any) => {
+        let item = elem.document;
+        extract.push({
             createTime: item.createTime,
             title: item.fields.title.stringValue,
             content: item.fields.content.stringValue,
@@ -16,7 +39,8 @@ export const fetchPost = async () => {
             comments: item.fields.comments.arrayValue.values,
             name: item.name,
             likes: item.fields.likes.arrayValue.values,
-        }
-    })
+        });
+    });
     return extract;
-}
+} 
+  
