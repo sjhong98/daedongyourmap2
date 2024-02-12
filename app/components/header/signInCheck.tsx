@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import LogoutIcon from '@mui/icons-material/Logout';
 import profilePic from '@/public/defaultProfilePic.jpeg';
 import { Button } from "@mui/material";
 import { getAuth, signOut } from "firebase/auth";
@@ -99,7 +100,7 @@ export default function SignInCheck() {
                     className="rounded-full object-cover aspect-square mr-2" 
                 />
                 <button onClick={handleClickProfile}>{displayName}</button> 
-                <button onClick={handleSignOut} className="ml-3">Sign Out</button>
+                <LogoutIcon onClick={handleSignOut} className="ml-3 mt-3" />
             </div>
             : 
             <LoginBtn variant="text" onClick={handleBtnClick} >Sign In</ LoginBtn> 

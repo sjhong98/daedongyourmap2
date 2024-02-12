@@ -115,7 +115,7 @@ export default function PostView() {
         }
     }
 
-    const fetchUserData = () => {
+    const fetchUserPost = () => {
         const auth = getAuth();
         auth.onAuthStateChanged((user) => {
 

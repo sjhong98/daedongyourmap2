@@ -6,8 +6,8 @@ export default function Layout({
     children: React.ReactNode
   }) {
     const menu = [
-        {url:'/edit', display:'프로필 수정'},
-        {url:'/changePw', display:'비밀번호 변경'}
+        {url:'/setting/edit', display:'프로필 수정'},
+        {url:'/setting/changePw', display:'비밀번호 변경'}
     ]
     return(
         <div className="flex w-[50vw] h-[75vh] bg-stone-800 rounded-2xl shadow-2xl nnb">

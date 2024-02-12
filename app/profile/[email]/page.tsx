@@ -1,15 +1,16 @@
 'use client';
 
+import Image from 'next/image';
 import SI from '@mui/icons-material/Settings';
 import ProfilePic from "../profilePic/profilePic";
+import tempProPic from '@/public/defaultProfilePic.jpeg';
 import { useRecoilValue } from "recoil";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import tempProPic from '@/public/defaultProfilePic.jpeg';
+import { fetchUserPost } from '../fetchUserPost';
 import { getProfile } from '../../functions/getProfile';
-import { ProfileType, profileStore } from "../../recoilContextProvider";
 import { userInfo } from '@/app/[location]/postView/postView';
-import Image from 'next/image';
+import { ProfileType, profileStore } from "../../recoilContextProvider";
 
 type Props = {
     params: { email: string };
@@ -25,9 +26,10 @@ export default function Profile(props: Props) {
     const [displayName, setDisplayName] = useState<string>("test");
     const [follow, setFollow] = useState<Array<string>>([]);
     const [follower, setFollower] = useState<Array<string>>([]);
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [isFollow, setIsFollow] = useState<boolean>(true);
     const [photoURL, setPhotoURL] = useState<string>("");
+    const [posts, setPosts] = useState<any>([]);
     const listStyle = "text-white nnn mt-4 cursor-pointer";
 
     useEffect(() => {
@@ -48,6 +50,12 @@ export default function Profile(props: Props) {
                 if(email === myEmail) setIsMyProfile(true);
                 else setIsMyProfile(false);
             }
+        })
+
+        // 한번에 전체 게시물 가져오기
+        fetchUserPost(email)
+        .then((res) => {
+            setPosts(res);
         })
     }, [])
 

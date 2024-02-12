@@ -1,15 +1,20 @@
 'use client';
 
+import Link from "next/link";
 import Image from "next/image";
 import logo from '@/public/daedong.png';
 import SignInCheck from "./signInCheck";
+import AddIcon from '@mui/icons-material/Add';
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 export default function Header() {
     const router = useRouter();
     const handleLogoClick = () => {
         router.push('/');
+    }
+
+    const handleClickAdd = () => {
+        router.push('/create');
     }
 
     return (
@@ -21,7 +26,7 @@ export default function Header() {
                 onClick={handleLogoClick}
             />
             <div className="flex-1" />
-            <Link href="/create" className="nnn text-white mr-4">create</Link>
+            <AddIcon className="cursor-pointer mr-4" onClick={handleClickAdd} />
             <SignInCheck />
         </header>
     )
