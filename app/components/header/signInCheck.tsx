@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { styled } from "@mui/material/styles";
+import AddIcon from '@mui/icons-material/Add';
 import { firebaseConfig } from "@/firestore/config";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { ProfileType, idTokenStore, isLoginStore, profileStore } from "@/app/recoilContextProvider";
@@ -36,6 +37,10 @@ export default function SignInCheck() {
 
     const handleClickProfile = () => {
         router.push(`/profile/${email}`);
+    }
+
+    const handleClickAdd = () => {
+        router.push('/create');
     }
 
     useEffect(() => {
@@ -92,6 +97,7 @@ export default function SignInCheck() {
         <div>
         { isLogin ? 
             <div className="flex">
+                <AddIcon className="cursor-pointer mr-4" onClick={handleClickAdd} />
                 <Image 
                     src={proPic} 
                     width={50} 

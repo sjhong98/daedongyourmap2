@@ -13,10 +13,6 @@ export default function Header() {
         router.push('/');
     }
 
-    const handleClickAdd = () => {
-        router.push('/create');
-    }
-
     return (
         <header className="flex items-center fixed h-[15vh] px-12 z-[120] cursor-pointer" >
             <Image 
@@ -26,7 +22,6 @@ export default function Header() {
                 onClick={handleLogoClick}
             />
             <div className="flex-1" />
-            <AddIcon className="cursor-pointer mr-4" onClick={handleClickAdd} />
             <SignInCheck />
         </header>
     )

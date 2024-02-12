@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UploadPost } from "@/app/create/uploadPost";
 import { useRecoilValue } from "recoil";
 import { idTokenStore, selectedPointStore } from "../recoilContextProvider";
@@ -17,6 +17,7 @@ export default function Create() {
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [readyToUpload, setReadyToUpload] = useState<boolean>(false);
     const idToken = useRecoilValue(idTokenStore);
     const selectedPoint = useRecoilValue(selectedPointStore);
 
@@ -34,6 +35,11 @@ export default function Create() {
             setIsLoading(true);
         })
     }
+
+    useEffect(() => {
+        if(title !== "" && image.length > 0 && selectedPoint !== "") setReadyToUpload(true);
+        else setReadyToUpload(false);
+    }, [title, image])
     
     return (
         <div className="flex flex-col center bg-stone-800 rounded-2xl w-[40vw] min-h-[60vh] shadow-2xl">
@@ -56,12 +62,16 @@ export default function Create() {
             { isLoading ? 
                 <></> 
                 : 
+                readyToUpload ? 
                 <Btn 
                     onClick={handleUploadPost} 
                     className="lml rounded-md bg-white text-black w-[20vw]"
                 >
                     upload
-                </Btn> }
+                </Btn> 
+                :
+                <></>
+            }
         </div>
     )
 }

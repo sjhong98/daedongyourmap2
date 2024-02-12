@@ -4,25 +4,26 @@ import Image from "next/image";
 import Input from "../modules/input";
 import Logo from '@/public/daedong.png';
 import { useState } from "react";
+import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { initializeApp } from "firebase/app";
-import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { firebaseConfig } from "@/firestore/config";
 import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, updateProfile } from "firebase/auth";
-import { useRecoilValue } from "recoil";
-import { idTokenStore } from "../recoilContextProvider";
 
 export default function SignUp() {
     const router = useRouter();
-    const [email, setEmail] = useState<string>("");
     const [pw, setPw] = useState<string>("");
-    const [nickname, setNickname] = useState<string>("");
     const [msg, setMsg] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [pwCheck, setPwCheck] = useState<string>("");
+    const [nickname, setNickname] = useState<string>("");
 
     const handleBtnClick = async () => {
         if(pw.length < 8) {
             setMsg("비밀번호는 8자 이상이어야 합니다");
+        } else if(pw !== pwCheck) {
+            setMsg("비밀번호가 다릅니다");
         } else if(email !== "" && pw !== "" && nickname !== "") {
             initializeApp(firebaseConfig)
             const auth = getAuth();
@@ -79,6 +80,7 @@ export default function SignUp() {
                 <Input state={email} setState={setEmail} ph="email" />
                 <Input state={pw} setState={setPw} ph="password" type="password" />
                 <p className="text-[0.7rem] text-gray-400 mt-[-1vh] mb-3">비밀번호 8자 이상</p>
+                <Input state={pwCheck} setState={setPwCheck} ph="password" type="password" />
                 <Input state={nickname} setState={setNickname} ph="nickname" />
                 <p className="text-sm text-red-500">{msg}</p>
                 <SignUpBtn variant="text" onClick={handleBtnClick} >sign up</SignUpBtn>
