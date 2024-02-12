@@ -1,4 +1,4 @@
-export const fetchPost = async (value?: string) => {
+export const fetchPost = async (startIndex: number, value?: string, endIndex?:number ) => {
     const response = await fetch('https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents:runQuery', {
     method: 'POST',
     cache: 'no-cache',
@@ -29,7 +29,7 @@ export const fetchPost = async (value?: string) => {
     let extract: any[] = [];
     data.map((elem: any) => {
         let item = elem.document;
-        extract.push({
+        item !== undefined && extract.push({
             createTime: item.createTime,
             title: item.fields.title.stringValue,
             content: item.fields.content.stringValue,

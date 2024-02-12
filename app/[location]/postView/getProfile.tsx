@@ -1,5 +1,5 @@
 export const getProfile = async (email:string) => {
-    console.log("looking for ", email, "...");
+    console.log("looking for", email, "...");
     const profile = await fetch(`https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents/users/${email}`, {
         method: 'GET',
     });

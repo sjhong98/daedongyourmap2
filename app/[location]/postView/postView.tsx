@@ -6,15 +6,15 @@ import styled from "styled-components";
 import FI from '@mui/icons-material/Favorite';
 import FB from '@mui/icons-material/FavoriteBorder';
 import profile from '@/public/defaultProfilePic.jpeg';
+import { getAuth } from "firebase/auth";
+import { fetchPost } from "../fetchPost";
 import { removeLike } from "./removeLike";
 import { uploadLike } from "./uploadLike";
+import { getProfile } from "./getProfile";
 import { useEffect, useState } from "react";
 import { UploadComment } from "./uploadComment";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { curPostStore, idTokenStore, isPostViewOpenStore, userDataStore } from "../../recoilContextProvider";
-import { fetchPost } from "../fetchPost";
-import { getAuth } from "firebase/auth";
-import { getProfile } from "./getProfile";
 
 interface userInfo {
     displayName: string,
@@ -26,13 +26,13 @@ interface userInfo {
 export default function PostView() {
     const post = useRecoilValue(curPostStore);
     const idToken = useRecoilValue(idTokenStore);
-    const userData = useRecoilValue(userDataStore);
-    const [displayName, setDisplayName] = useState<string>("");
     const [likes, setLikes] = useState<any>([0]);
+    const userData = useRecoilValue(userDataStore);
     const [comments, setComments] = useState<any>([]);
     const [comment, setComment] = useState<string>("");
     const [didLike, setDidLike] = useState<boolean>(false);
     const [style, setStyle] = useState<string>("invisible");
+    const [displayName, setDisplayName] = useState<string>("");
     const [isOpen, setIsOpen] = useRecoilState(isPostViewOpenStore);
 
     useEffect(() => {
@@ -46,14 +46,14 @@ export default function PostView() {
             getProfile(post.user)
             .then((res) => {
                 if(res !== undefined && res.displayName !== "") setDisplayName(res.displayName);
-                else setDisplayName(post.user)
+                else setDisplayName(post.user);
             })
             let temp = [...comments];
             post.comments.map((item:any, index:number) => {
-                console.log(item.user.mapValue.fields.user.stringValue);
-                if(item.user !== undefined && item.user.mapValue.fields.user.stringValue !== "") {
-                    getProfile(item.user.mapValue.fields.user.stringValue)
+                if(item.mapValue.fields.user.stringValue !== "") {
+                    getProfile(item.mapValue.fields.user.stringValue)
                     .then((res) => {
+                        console.log("test : ", item.mapValue.fields.user.stringValue, res)
                         if(res !== undefined)
                             temp[index].user = res.displayName;
                     })
