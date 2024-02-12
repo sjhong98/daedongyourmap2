@@ -1,7 +1,7 @@
 import PostBoard from "./postBoard"
 import PostView from "./postView/postView";
 import { fetchPost } from "./fetchPost";
-import { swtichName } from "../functions.tsx/switchName";
+import { swtichName } from "../functions/switchName";
 
 type Props = {
     params: { location: string };

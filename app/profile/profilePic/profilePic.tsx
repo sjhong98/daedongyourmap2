@@ -14,7 +14,8 @@ export default function ProfilePic() {
     const email = localStorage.getItem('ddym-email');
 
     const handleImageAdd = (e:any) => {
-        updateProfilePic(e.target.files[0], setImage, idToken, email)
+        if(email)
+            updateProfilePic(e.target.files[0], setImage, idToken, email)
     }
 
     useEffect(() => {

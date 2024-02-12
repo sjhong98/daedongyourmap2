@@ -34,7 +34,7 @@ export default function SignInCheck() {
     }
 
     const handleClickProfile = () => {
-        router.push('/profile');
+        router.push(`/profile/${email}`);
     }
 
     useEffect(() => {

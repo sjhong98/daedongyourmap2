@@ -10,13 +10,13 @@ import { getAuth } from "firebase/auth";
 import { fetchPost } from "../fetchPost";
 import { removeLike } from "./removeLike";
 import { uploadLike } from "./uploadLike";
-import { getProfile } from "./getProfile";
 import { useEffect, useState } from "react";
 import { UploadComment } from "./uploadComment";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { getProfile } from "@/app/functions/getProfile";
 import { curPostStore, idTokenStore, isPostViewOpenStore, userDataStore } from "../../recoilContextProvider";
 
-interface userInfo {
+export interface userInfo {
     displayName: string,
     photoURL: string,
     follow: Array<string>,

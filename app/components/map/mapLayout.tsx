@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Map from "./map";
 import { useRecoilValue } from "recoil";
 import { selectedPointStore } from "@/app/recoilContextProvider";
-import { swtichName } from "@/app/functions.tsx/switchName";
+import { swtichName } from "@/app/functions/switchName";
 
 export default function MapLayout() {
     const selectedPoint = useRecoilValue(selectedPointStore);
