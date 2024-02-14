@@ -18,19 +18,19 @@ import gj from '@/public/map/gj.png';
 import jn from '@/public/map/jn.png'; 
 import jb from '@/public/map/jb.png'; 
 import bg from '@/public/map/bg.png';
-import Image, { StaticImageData } from 'next/image';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
+import { useRouter } from 'next/navigation';
+import Image, { StaticImageData } from 'next/image';
 import { selectedPointStore } from '@/app/recoilContextProvider';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 interface propsType{
     setState?: Dispatch<SetStateAction<string>>
 }
 
 // ssr로 히트맵 정보 받기
-export default function Map(props:propsType) {
+export default function Map() {
     const [cursorX, setCursorX] = useState(0);
     const [cursorY, setCursorY] = useState(0);
     let pivotX:number, pivotY:number;

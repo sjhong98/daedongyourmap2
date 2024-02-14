@@ -1,11 +1,11 @@
 'use client';
 
+import ProfilePic from "@/app/profile/profilePic/profilePic";
 import { useRecoilValue } from "recoil";
 import { useEffect, useState } from "react";
-import ProfilePic from "@/app/profile/profilePic/profilePic";
-import { ProfileType, idTokenStore, profileStore } from "@/app/recoilContextProvider";
-import Input from "@/app/modules/input";
 import { getAuth, updateProfile } from "firebase/auth";
+import { ProfileType, idTokenStore, profileStore } from "@/app/recoilContextProvider";
+
 
 export default function Edit() {
     const profile = useRecoilValue<ProfileType>(profileStore);

@@ -1,10 +1,8 @@
 'use client';
 
-import Link from "next/link";
 import Image from "next/image";
 import logo from '@/public/daedong.png';
 import SignInCheck from "./signInCheck";
-import AddIcon from '@mui/icons-material/Add';
 import { useRouter } from "next/navigation";
 
 export default function Header() {

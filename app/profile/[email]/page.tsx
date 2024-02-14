@@ -4,13 +4,10 @@ import Image from 'next/image';
 import SI from '@mui/icons-material/Settings';
 import ProfilePic from "../profilePic/profilePic";
 import tempProPic from '@/public/defaultProfilePic.jpeg';
-import { useRecoilValue } from "recoil";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchUserPost } from '../fetchUserPost';
 import { getProfile } from '../../functions/getProfile';
-import { userInfo } from '@/app/[location]/postView/postView';
-import { ProfileType, profileStore } from "../../recoilContextProvider";
 
 type Props = {
     params: { email: string };

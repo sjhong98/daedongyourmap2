@@ -4,7 +4,9 @@ import Image from "next/image";
 import PostSlider from "./postSlider";
 import styled from "styled-components";
 import FI from '@mui/icons-material/Favorite';
+import Modify from '@mui/icons-material/Create';
 import FB from '@mui/icons-material/FavoriteBorder';
+import Delete from '@mui/icons-material/DeleteOutline';
 import profile from '@/public/defaultProfilePic.jpeg';
 import { getAuth } from "firebase/auth";
 import { fetchPost } from "../fetchPost";
@@ -15,6 +17,7 @@ import { UploadComment } from "./uploadComment";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getProfile } from "@/app/functions/getProfile";
 import { curPostStore, idTokenStore, isPostViewOpenStore, userDataStore } from "../../recoilContextProvider";
+import { deletePost } from "./deletePost";
 
 export interface userInfo {
     displayName: string,
@@ -31,47 +34,52 @@ export default function PostView() {
     const [comments, setComments] = useState<any>([]);
     const [comment, setComment] = useState<string>("");
     const [didLike, setDidLike] = useState<boolean>(false);
+    const [postId, setPostId] = useState<string>("");
     const [style, setStyle] = useState<string>("invisible");
     const [displayName, setDisplayName] = useState<string>("");
     const [isOpen, setIsOpen] = useRecoilState(isPostViewOpenStore);
+    const btnStyle = {color:'black', width:20, cursor:'pointer'};
 
     useEffect(() => {
-        // DB에 게시물이 있을 때 -> likes에 넣기 | 없을 때 -> undefined -> 빈 배열 넣기
-        if(post && post.likes !== undefined) {
-            setLikes([...post.likes]);
-        } else  
-            setLikes([]);
+        if(post) {
+            // DB에 게시물이 있을 때 -> likes에 넣기 | 없을 때 -> undefined -> 빈 배열 넣기
+            if(post.likes !== undefined) {
+                setLikes([...post.likes]);
+            } else  
+                setLikes([]);
 
-        if(post && post.user !== undefined) {
-            getProfile(post.user)
-            .then((res) => {
-                if(res !== undefined && res.displayName !== "") setDisplayName(res.displayName);
-                else setDisplayName(post.user);
-            })
-            let temp = [...comments];
-            post.comments.map((item:any, index:number) => {
-                if(item.mapValue.fields.user.stringValue !== "") {
-                    getProfile(item.mapValue.fields.user.stringValue)
-                    .then((res) => {
-                        console.log("test : ", item.mapValue.fields.user.stringValue, res)
-                        if(res !== undefined)
-                            temp[index].user = res.displayName;
-                    })
-                }
-            })
-            setComments(temp);
+            if(post.user !== undefined) {
+                getProfile(post.user)
+                .then((res) => {
+                    if(res !== undefined && res.displayName !== "") setDisplayName(res.displayName);
+                    else setDisplayName(post.user);
+                })
+                let temp = [...comments];
+                post.comments.map((item:any, index:number) => {
+                    if(item.mapValue.fields.user.stringValue !== "") {
+                        getProfile(item.mapValue.fields.user.stringValue)
+                        .then((res) => {
+                            console.log("test : ", item.mapValue.fields.user.stringValue, res)
+                            if(res !== undefined)
+                                temp[index].user = res.displayName;
+                        })
+                    }
+                })
+                setComments(temp);
+            }
+            
+            if(post.name !== undefined) {
+                const splitted = post.name.split('/');
+                setPostId(splitted[6]);
+            }
         }
     }, [post])
 
     useEffect(() => {
         // 내가 좋아요 표시한 게시물인지 확인
-        let curEmail:string;
-        if(localStorage !== undefined)
-            localStorage.getItem('ddym-email');
-        if(likes.find((item:any) => item.stringValue === curEmail) !== undefined) 
-            setDidLike(true);
-        else 
-            setDidLike(false);
+        let curEmail = localStorage.getItem('ddym-email');
+        if(likes.find((item:any) => item.stringValue === curEmail) !== undefined) setDidLike(true);
+        else setDidLike(false);
     }, [likes])
     
     useEffect(() => {
@@ -124,6 +132,15 @@ export default function PostView() {
         })
     }
 
+    const handleClickDelete = () => {
+        if(window.confirm("게시물을 삭제하시겠습니까?"))
+            deletePost(postId);
+    }
+
+    const handleClickModify = () => {
+
+    }
+
     return (
         <div 
             id="outside-view" 
@@ -171,7 +188,7 @@ export default function PostView() {
                     <div className="flex flex-col h-[10vh] border-t-[1px]">
 
                         {/* 좋아요 */}
-                        <div className="flex flex flex-1 mt-1">
+                        <div className="flex flex-1 mt-1">
                             { didLike ?
                                 // 이미 좋아요 표시한 경우
                                 <LikesAnim onClick={handleUnlikes}>
@@ -192,6 +209,11 @@ export default function PostView() {
                             <p className="nnn text-[0.8rem] ml-1">
                                 {likes.length} 명이 좋아합니다
                             </p>
+                            <div className="flex-1" />
+                            <div className="mt-[-2px]">
+                                <Delete sx={btnStyle} onClick={handleClickDelete} />
+                                <Modify sx={btnStyle} onClick={handleClickModify} />
+                            </div>
                         </div>
 
                         {/* 댓글 */}

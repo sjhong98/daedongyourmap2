@@ -7,8 +7,8 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { styled } from '@mui/material/styles';
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { idTokenStore, isLoginStore, userDataStore } from "../recoilContextProvider";
 
 export default function SignIn() {

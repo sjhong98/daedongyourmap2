@@ -29,6 +29,9 @@ export const fetchPost = async (startIndex: number, value?: string, endIndex?:nu
     let extract: any[] = [];
     data.map((elem: any) => {
         let item = elem.document;
+        let curComments:any;
+        if(item.fields.comments.arrayValue.values === undefined) curComments = [];
+        else curComments = item.fields.comments.arrayValue.values;
         item !== undefined && extract.push({
             createTime: item.createTime,
             title: item.fields.title.stringValue,
@@ -36,7 +39,7 @@ export const fetchPost = async (startIndex: number, value?: string, endIndex?:nu
             point: item.fields.point.stringValue,
             photo: item.fields.photo.arrayValue.values,
             user: item.fields.user.stringValue,
-            comments: item.fields.comments.arrayValue.values,
+            comments: curComments,
             name: item.name,
             likes: item.fields.likes.arrayValue.values,
         });

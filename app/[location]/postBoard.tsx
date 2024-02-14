@@ -3,7 +3,7 @@
 import Image from "next/image";
 import styled from "styled-components";
 import { fetchPost } from "./fetchPost";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { curPostStore, isPostViewOpenStore, PostType } from "../recoilContextProvider";
 
@@ -14,6 +14,7 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
     const [startIndex, setStartIndex] = useState<number>(40);
     const [endIndex, setEndIndex] = useState<number>(80);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [firstRender, setFirstRender] = useState<boolean>(true);
     const [postViewOpen, setPostViewOpen] = useRecoilState(isPostViewOpenStore);
     
     // postView 열기
@@ -22,17 +23,25 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
         setPostViewOpen(true);
     }
 
+    // useEffect(() => {
+    //     console.log(props.data2);
+    // }, [])
+
     // postView 닫히면 post update
     useEffect(() => {
-        const res = fetchPost(startIndex-40, props.location, endIndex-40);
-        res.then((res) => {
-            let temp:any[] = [];
-            if(posts !== undefined) {
-                temp = [...posts];
-                setPosts([...temp, ...res]);
-                console.log("post updated", res);
-            }
-        })
+        if(!firstRender) {
+            const res = fetchPost(startIndex-40, props.location, endIndex-40);
+            res.then((res) => {
+                let temp:any[] = [];
+                if(posts !== undefined) {
+                    temp = [...posts];
+                    temp.splice(startIndex-40, 40, ...res);
+                    setPosts(temp);
+                    console.log("post updated", res);
+                }
+            })
+        } else
+        setFirstRender(false);
     }, [postViewOpen])
 
     useEffect(() => {
@@ -73,30 +82,32 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
       }, [target, endIndex]);
 
     return (
-        <div className="grid grid-cols-3 gap-1 min-h-[150vh]">
-            { posts!==undefined && posts.map((item:PostType, index:number) => {
-                return (
-                <Wrapper 
-                    key={index} 
-                    className="center"
-                    onClick={()=>handleClickPost(item)}
-                >
-                    <p className="absolute text-white nnn opacity-0 z-[100]">{item.title}</p>
-                    <div>
-                        <Image 
-                            src={item.photo!==undefined && item.photo[0].stringValue} 
-                            alt={item.title} 
-                            width={400} 
-                            height={400} 
-                            className="aspect-square object-cover object-center w-[20vw]"
-                        />
-                    </div>
-                </Wrapper>
-                )
-            })}
+        <div>
+            <div className="grid grid-cols-3 gap-1">
+                { posts!==undefined && posts.map((item:PostType, index:number) => {
+                    return (
+                    <Wrapper 
+                        key={index} 
+                        className="center"
+                        onClick={()=>handleClickPost(item)}
+                    >
+                        <p className="absolute text-white nnn opacity-0 z-[100]">{item.title}</p>
+                        <div>
+                            <Image 
+                                src={item.photo!==undefined && item.photo[0].stringValue} 
+                                alt={item.title} 
+                                width={400} 
+                                height={400} 
+                                className="aspect-square object-cover object-center w-[20vw]"
+                            />
+                        </div>
+                    </Wrapper>
+                    )
+                })}
+            </div>
             <div className="flex flex-col">
-                <div className="w-screen min-h-[120vh] flex-1" />
-                { isLoading ? <></> : <div ref={setTarget} className="w-screen h-[10vh] bg-red-500" /> }
+                <div className="w-full h-[100vh]" />
+                {/* { isLoading ? <></> : <div ref={setTarget} className="w-screen h-[10vh] bg-red-500" /> } */}
             </div>
         </div>
     )

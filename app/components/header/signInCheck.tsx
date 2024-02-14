@@ -4,12 +4,12 @@ import Image from "next/image";
 import LogoutIcon from '@mui/icons-material/Logout';
 import profilePic from '@/public/defaultProfilePic.jpeg';
 import { Button } from "@mui/material";
-import { getAuth, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { styled } from "@mui/material/styles";
 import AddIcon from '@mui/icons-material/Add';
+import { getAuth, signOut } from "firebase/auth";
 import { firebaseConfig } from "@/firestore/config";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { ProfileType, idTokenStore, isLoginStore, profileStore } from "@/app/recoilContextProvider";
@@ -99,7 +99,9 @@ export default function SignInCheck() {
         <div>
         { isLogin ? 
             <div className="flex">
-                <AddIcon className="cursor-pointer mr-4" onClick={handleClickAdd} />
+                <div className="mt-3">
+                    <AddIcon className="cursor-pointer mr-4" onClick={handleClickAdd} />
+                </div>
                 <Image 
                     src={proPic} 
                     width={50} 
