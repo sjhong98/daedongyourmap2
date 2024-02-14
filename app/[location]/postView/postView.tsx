@@ -3,12 +3,14 @@
 import Image from "next/image";
 import PostSlider from "./postSlider";
 import styled from "styled-components";
+import PostContent from "./postContent";
 import FI from '@mui/icons-material/Favorite';
 import Modify from '@mui/icons-material/Create';
 import FB from '@mui/icons-material/FavoriteBorder';
 import Delete from '@mui/icons-material/DeleteOutline';
 import profile from '@/public/defaultProfilePic.jpeg';
 import { getAuth } from "firebase/auth";
+import { deletePost } from "./deletePost";
 import { removeLike } from "./removeLike";
 import { uploadLike } from "./uploadLike";
 import { useEffect, useState } from "react";
@@ -16,7 +18,6 @@ import { UploadComment } from "./uploadComment";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getProfile } from "@/app/functions/getProfile";
 import { curPostStore, idTokenStore, isPostViewOpenStore, userDataStore } from "../../recoilContextProvider";
-import { deletePost } from "./deletePost";
 
 export interface userInfo {
     displayName: string,
@@ -26,10 +27,10 @@ export interface userInfo {
 }
 
 export default function PostView() {
-    const [post, setPost] = useRecoilState(curPostStore);
     const idToken = useRecoilValue(idTokenStore);
-    const [likes, setLikes] = useState<any>([0]);
     const userData = useRecoilValue(userDataStore);
+    const [post, setPost] = useRecoilState(curPostStore);
+    const [likes, setLikes] = useState<any>([0]);
     const [comments, setComments] = useState<any>([]);
     const [comment, setComment] = useState<string>("");
     const [didLike, setDidLike] = useState<boolean>(false);
@@ -37,6 +38,7 @@ export default function PostView() {
     const [style, setStyle] = useState<string>("invisible");
     const [displayName, setDisplayName] = useState<string>("");
     const [isOpen, setIsOpen] = useRecoilState(isPostViewOpenStore);
+    const [isModify, setIsModify] = useState<boolean>(false);
     const btnStyle = {color:'black', width:20, cursor:'pointer'};
 
     useEffect(() => {
@@ -90,10 +92,19 @@ export default function PostView() {
     const handleClickExit = (e:any) => {
         // 바깥 영역 클릭시 모달 제거 -> post 갱신해야 함
         if(e.target.id === 'outside-view') {
+            if(isModify) {
+                if(window.confirm('게시물 수정을 취소하시겠습니까?')) 
+                    resetData();
+            } else
+                resetData();
+        }
+
+        function resetData() {
             setIsOpen(false);
             // 나가면서 값 갱신함으로써 useEffect 의존성 활성화되도록 함
             setComments([0]);
             setLikes([0]);
+            setIsModify(false);
         }
     }
 
@@ -139,7 +150,7 @@ export default function PostView() {
     }
 
     const handleClickModify = () => {
-
+        setIsModify(true);
     }
 
     return (
@@ -155,7 +166,6 @@ export default function PostView() {
                 <div className="w-1/3 h-full flex flex-col">
                     {/* 요소를 바닥에 고정시키기 위해서는 중간 요소에 flex-1을 주면 됨 */}
                     <div className="p-6 flex-1">
-
                         {/* 작성자 정보 */}
                         <div className="">
                             <div className="flex nnn">
@@ -163,8 +173,13 @@ export default function PostView() {
                                 { userData?.displayName === undefined ? <p>{displayName}</p> : <>{userData.displayName}</>}
                             </div>
                             <div className="mt-1 ml-8">
-                                <p className="nnb">{post?.title}</p>
-                                <p className="text-[0.8rem] nnn">{post?.content}</p>
+                                <PostContent 
+                                    post={post} 
+                                    setIsModify={setIsModify}
+                                    isModify={isModify} 
+                                    postId={postId} 
+                                    idToken={idToken}
+                                />
                             </div>
                         </div>
 
