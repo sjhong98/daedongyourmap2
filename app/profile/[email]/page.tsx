@@ -22,7 +22,7 @@ export default function Profile(props: Props) {
     let email = props.params.email.replace('%40', '@');
     const textStyle = "text-white text-[1rem]";
     let myEmail:string;
-    if(localStorage !== undefined)
+    if(typeof window !== 'undefined' && localStorage !== null)
         localStorage.getItem('ddym-email');
     const [isMyProfile, setIsMyProfile] = useState<boolean>(false);
     const [displayName, setDisplayName] = useState<string>("test");

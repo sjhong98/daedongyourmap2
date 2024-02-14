@@ -16,9 +16,9 @@ import { ProfileType, idTokenStore, isLoginStore, profileStore } from "@/app/rec
 
 export default function SignInCheck() {
     const router = useRouter();
-    let email:string;
-    if(localStorage !== undefined)
-        localStorage.getItem('ddym-email');
+    let email:string | null;
+    if(typeof window !== 'undefined' && localStorage !== null)
+        email = localStorage.getItem('ddym-email');
     const setIdToken = useSetRecoilState(idTokenStore);
     const [proPic, setProPic] = useState<any>("");
     const [isLogin, setIsLogin] = useRecoilState(isLoginStore);

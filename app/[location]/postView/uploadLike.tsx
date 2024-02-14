@@ -2,9 +2,7 @@ import { Dispatch } from "react";
 import { PostType } from "@/app/recoilContextProvider";
 
 export async function uploadLike(post:PostType, idToken:string, likes:any, setLikes:Dispatch<any>) {
-    let curEmail:string;
-    if(localStorage !== undefined)
-        localStorage.getItem('ddym-email');
+    const curEmail = localStorage.getItem('ddym-email');
     let temp:any[] = [];
     // 기존 데이터
     if(likes.length !== 0) {

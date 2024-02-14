@@ -3,7 +3,7 @@ import { PostType } from "@/app/recoilContextProvider";
 
 export async function removeLike(post:PostType, idToken:string, likes:any, setLikes:Dispatch<any>) {
     let curEmail:string;
-    if(localStorage !== undefined)
+    if(typeof window !== 'undefined' && localStorage !== null)
         localStorage.getItem('ddym-email');
     let temp:any[] = [];
     if(likes.length !== 0) {

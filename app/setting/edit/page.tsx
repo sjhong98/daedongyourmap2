@@ -13,7 +13,7 @@ export default function Edit() {
     const [activeBtn, setActiveBtn] = useState<boolean>(true);
     const idToken = useRecoilValue(idTokenStore);
     let email:string;
-    if(localStorage !== undefined)
+    if(typeof window !== 'undefined' && localStorage !== null)
         localStorage.getItem('ddym-email');
 
     useEffect(() => {
