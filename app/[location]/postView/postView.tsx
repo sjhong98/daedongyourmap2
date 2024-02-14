@@ -18,6 +18,7 @@ import { UploadComment } from "./uploadComment";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getProfile } from "@/app/functions/getProfile";
 import { curPostStore, idTokenStore, isPostViewOpenStore, userDataStore } from "../../recoilContextProvider";
+import { useRouter } from "next/navigation";
 
 export interface userInfo {
     displayName: string,
@@ -27,12 +28,13 @@ export interface userInfo {
 }
 
 export default function PostView() {
+    const router = useRouter();
     const idToken = useRecoilValue(idTokenStore);
     const userData = useRecoilValue(userDataStore);
     const [post, setPost] = useRecoilState(curPostStore);
     const [likes, setLikes] = useState<any>([0]);
-    const [comments, setComments] = useState<any>([]);
     const [comment, setComment] = useState<string>("");
+    const [comments, setComments] = useState<any>([]);
     const [didLike, setDidLike] = useState<boolean>(false);
     const [postId, setPostId] = useState<string>("");
     const [style, setStyle] = useState<string>("invisible");
@@ -55,24 +57,33 @@ export default function PostView() {
                     if(res !== undefined && res.displayName !== "") setDisplayName(res.displayName);
                     else setDisplayName(post.user);
                 })
-                let temp = [...comments];
-                post.comments.map((item:any, index:number) => {
-                    if(item.mapValue.fields.user.stringValue !== "") {
-                        getProfile(item.mapValue.fields.user.stringValue)
-                        .then((res) => {
-                            if(res !== undefined)
-                                temp[index].user = res.displayName;
-                        })
-                        temp.push(item);
-                    }
-                })
-                setComments(temp);
+                let temp:any[] = [];
             }
             
             if(post.name !== undefined) {
                 const splitted = post.name.split('/');
                 setPostId(splitted[6]);
             }
+
+            // comments의 사용자 정보 가져오고 display하기
+            post.comments.map((item:any) => {
+                let email = item.mapValue.fields.user.stringValue;
+                getProfile(email)
+                .then((res:any) => {
+                    let data:any, tempPhoto;
+                    if(res !== undefined) {
+                        if(res.photoURL !== "") tempPhoto = res.photoURL;
+                        else tempPhoto = profile;
+                        data = {
+                            user: res.displayName, 
+                            photoURL: tempPhoto, 
+                            email: email, 
+                            comment: item.mapValue.fields.comment.stringValue
+                        };
+                    }
+                    setComments((prev:any) => [...prev, data]);
+                })
+            })
         }
     }, [post])
 
@@ -102,7 +113,7 @@ export default function PostView() {
         function resetData() {
             setIsOpen(false);
             // 나가면서 값 갱신함으로써 useEffect 의존성 활성화되도록 함
-            setComments([0]);
+            setComments([]);
             setLikes([0]);
             setIsModify(false);
         }
@@ -122,8 +133,21 @@ export default function PostView() {
     }
 
     const handleCommentInput = () => {
+        let curEmail = localStorage.getItem('ddym-email');
         if(post && comment !== "") {
-            UploadComment(post, idToken, comment, comments, setComments);
+            UploadComment(post, idToken, comment, post.comments);
+            if(curEmail) getProfile(curEmail)
+            .then((res) => {
+                if(res !== undefined) {
+                    let temp = {
+                        email: curEmail,
+                        photoURL: res?.photoURL,
+                        comment: comment,
+                        user: res?.displayName
+                    }
+                    setComments((prev:any) => [...prev, temp]);
+                }
+            })
             setComment("");
         }
     }
@@ -145,6 +169,10 @@ export default function PostView() {
 
     const handleClickModify = () => {
         setIsModify(true);
+    }
+
+    const handleClickProfile = (email:string) => {
+        router.push(`/profile/${email}`);
     }
 
     return (
@@ -181,12 +209,24 @@ export default function PostView() {
                         <div className="w-full h-full pt-10 overflow-auto">
                         { comments !== undefined && comments.map((item:any, index:number) => {
                             return (
-                                <div key={index}>
-                                    <p className="nnn text-[0.8rem] mt-6">
-                                        {item.mapValue !== undefined && item.mapValue.fields.user.stringValue}
-                                    </p>
-                                    <p className="nnn text-[0.7rem]">
-                                        {item.mapValue !== undefined && item.mapValue.fields.comment.stringValue}
+                                <div key={index} className="mt-6 flex">
+                                    <div 
+                                        className="flex cursor-pointer"
+                                        onClick={() => handleClickProfile(item.email)}
+                                    >
+                                        <Image 
+                                            src={item.photoURL} 
+                                            width={30} 
+                                            height={30} 
+                                            alt="profile" 
+                                            className="rounded-full object-cover aspect-square"
+                                        />
+                                        <p className="nnb text-[0.8rem] ml-1">
+                                            {item.user}
+                                        </p>
+                                    </div>
+                                    <p className="nnn text-[0.7rem] ml-3">
+                                        {item.comment}
                                     </p>
                                 </div>    
                             )
