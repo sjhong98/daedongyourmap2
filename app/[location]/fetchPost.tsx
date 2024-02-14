@@ -44,6 +44,7 @@ export const fetchPost = async (startIndex: number, value?: string, endIndex?:nu
             likes: item.fields.likes.arrayValue.values,
         });
     });
+    console.log("rough data : " , data);
     return extract;
 } 
   

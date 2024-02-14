@@ -60,10 +60,10 @@ export default function PostView() {
                     if(item.mapValue.fields.user.stringValue !== "") {
                         getProfile(item.mapValue.fields.user.stringValue)
                         .then((res) => {
-                            console.log("test : ", item.mapValue.fields.user.stringValue, res)
                             if(res !== undefined)
                                 temp[index].user = res.displayName;
                         })
+                        temp.push(item);
                     }
                 })
                 setComments(temp);
@@ -123,14 +123,8 @@ export default function PostView() {
 
     const handleCommentInput = () => {
         if(post && comment !== "") {
-            UploadComment(post, idToken, comment, comments, setComments)
-            .then((res) => {
-                console.log("댓글 추가 성공", res);
-                setComment("");
-            })
-            .catch((err) => {
-                console.log("댓글 추가 실패", err);
-            })
+            UploadComment(post, idToken, comment, comments, setComments);
+            setComment("");
         }
     }
 

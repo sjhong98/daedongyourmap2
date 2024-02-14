@@ -1,27 +1,30 @@
 'use client';
 
-import { PostType } from "@/app/recoilContextProvider";
-import { firebaseConfig } from "@/firestore/config";
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import { Dispatch } from "react";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "@/firestore/config";
+import { PostType } from "@/app/recoilContextProvider";
 
 export async function UploadComment(post:PostType, idToken:string, comment:string, comments:any, setComments:Dispatch<any>) {
     initializeApp(firebaseConfig);
-    const auth = getAuth();
+    const email = localStorage.getItem('ddym-email');
     let temp:any[] = [];
     if(comments.length !== 0) {
         temp = [...comments];
     }
-    temp.push({ mapValue : 
-        { fields : 
-            {
-                user: { stringValue : auth.currentUser && auth.currentUser.email },
-                comment: { stringValue : comment }
+    temp.push(
+        { mapValue : 
+            { fields : 
+                {
+                    user: { stringValue : email },
+                    comment: { stringValue : comment }
+                }
             }
         }
-    })
-    const res = fetch(`https://firestore.googleapis.com/v1/${post.name}?updateMask.fieldPaths=comments`, {
+    )
+
+    console.log(temp);
+    fetch(`https://firestore.googleapis.com/v1/${post.name}?updateMask.fieldPaths=comments`, {
         method: 'PATCH',
         headers: {
             "Authorization": `Bearer ${idToken}`
@@ -35,7 +38,6 @@ export async function UploadComment(post:PostType, idToken:string, comment:strin
                 }
             }
         })
-    })
+    });
     setComments(temp);
-    return (await res).json();
 }
