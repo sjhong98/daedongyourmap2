@@ -95,7 +95,6 @@ export default function PostView() {
             // 나가면서 값 갱신함으로써 useEffect 의존성 활성화되도록 함
             setComments([0]);
             setLikes([0]);
-            fetchPost
         }
     }
 
@@ -133,8 +132,10 @@ export default function PostView() {
     }
 
     const handleClickDelete = () => {
-        if(window.confirm("게시물을 삭제하시겠습니까?"))
+        if(window.confirm("게시물을 삭제하시겠습니까?")) {
             deletePost(postId);
+            setIsOpen(false);
+        }
     }
 
     const handleClickModify = () => {
