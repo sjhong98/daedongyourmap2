@@ -9,7 +9,6 @@ import FB from '@mui/icons-material/FavoriteBorder';
 import Delete from '@mui/icons-material/DeleteOutline';
 import profile from '@/public/defaultProfilePic.jpeg';
 import { getAuth } from "firebase/auth";
-import { fetchPost } from "../fetchPost";
 import { removeLike } from "./removeLike";
 import { uploadLike } from "./uploadLike";
 import { useEffect, useState } from "react";
@@ -27,7 +26,7 @@ export interface userInfo {
 }
 
 export default function PostView() {
-    const post = useRecoilValue(curPostStore);
+    const [post, setPost] = useRecoilState(curPostStore);
     const idToken = useRecoilValue(idTokenStore);
     const [likes, setLikes] = useState<any>([0]);
     const userData = useRecoilValue(userDataStore);
@@ -135,6 +134,7 @@ export default function PostView() {
         if(window.confirm("게시물을 삭제하시겠습니까?")) {
             deletePost(postId);
             setIsOpen(false);
+            setPost(null);
         }
     }
 
