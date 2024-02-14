@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { UploadPost } from "@/app/create/uploadPost";
 import { useRecoilValue } from "recoil";
-import { idTokenStore, selectedPointStore } from "../recoilContextProvider";
+import { idTokenStore, isLoginStore, selectedPointStore } from "../recoilContextProvider";
 import { UploadImage } from "@/app/create/uploadImage";
 import InputImage from "./inputImage";
 import PointSelection from "./pointSelection";
@@ -13,19 +13,23 @@ import styled from "styled-components";
 
 export default function Create() {
     const router = useRouter();
+    const idToken = useRecoilValue(idTokenStore);
+    const isLogin = useRecoilValue(isLoginStore);
     const [image, setImage] = useState<any[]>([]);
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [readyToUpload, setReadyToUpload] = useState<boolean>(false);
-    const idToken = useRecoilValue(idTokenStore);
     const selectedPoint = useRecoilValue(selectedPointStore);
-
     const inputStyle = "text-black mb-6 w-[20vw] rounded-md px-3";
 
     const routerToMain = (point:string) => {
         router.push(`/${point}`);
     }
+
+    useEffect(() => {
+        if(!isLogin) router.push(`/signin`);
+    }, [])
 
     const handleUploadPost = () => {
         // 게시물 저장 path 가져와 cloud path로 사용
