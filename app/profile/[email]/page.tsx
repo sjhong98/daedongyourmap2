@@ -21,7 +21,9 @@ export default function Profile(props: Props) {
     const router = useRouter();
     let email = props.params.email.replace('%40', '@');
     const textStyle = "text-white text-[1rem]";
-    const myEmail = localStorage.getItem('ddym-email');
+    let myEmail:string;
+    if(localStorage !== undefined)
+        localStorage.getItem('ddym-email');
     const [isMyProfile, setIsMyProfile] = useState<boolean>(false);
     const [displayName, setDisplayName] = useState<string>("test");
     const [follow, setFollow] = useState<Array<string>>([]);

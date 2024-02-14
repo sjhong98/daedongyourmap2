@@ -11,7 +11,9 @@ export default function ProfilePic() {
     const [image, setImage] = useState<any>();
     const profile = useRecoilValue(profileStore);
     const idToken = useRecoilValue(idTokenStore);
-    const email = localStorage.getItem('ddym-email');
+    let email:string;
+    if(localStorage !== undefined)
+        localStorage.getItem('ddym-email');
 
     const handleImageAdd = (e:any) => {
         if(email)

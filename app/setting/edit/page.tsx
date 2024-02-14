@@ -12,7 +12,9 @@ export default function Edit() {
     const [displayName, setDisplayName] = useState<string>("");
     const [activeBtn, setActiveBtn] = useState<boolean>(true);
     const idToken = useRecoilValue(idTokenStore);
-    const email = localStorage.getItem('ddym-email');
+    let email:string;
+    if(localStorage !== undefined)
+        localStorage.getItem('ddym-email');
 
     useEffect(() => {
         if(profile.displayName) setDisplayName(profile.displayName);

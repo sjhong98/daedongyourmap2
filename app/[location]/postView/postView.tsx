@@ -65,7 +65,9 @@ export default function PostView() {
 
     useEffect(() => {
         // 내가 좋아요 표시한 게시물인지 확인
-        let curEmail = localStorage.getItem('ddym-email');
+        let curEmail:string;
+        if(localStorage !== undefined)
+            localStorage.getItem('ddym-email');
         if(likes.find((item:any) => item.stringValue === curEmail) !== undefined) 
             setDidLike(true);
         else 

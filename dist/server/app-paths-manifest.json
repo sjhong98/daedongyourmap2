@@ -1,0 +1,12 @@
+{
+  "/_not-found": "app/_not-found.js",
+  "/page": "app/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/create/page": "app/create/page.js",
+  "/[location]/page": "app/[location]/page.js",
+  "/signin/page": "app/signin/page.js",
+  "/signup/page": "app/signup/page.js",
+  "/profile/[email]/page": "app/profile/[email]/page.js",
+  "/signup/verify/page": "app/signup/verify/page.js",
+  "/setting/edit/page": "app/setting/edit/page.js"
+}
