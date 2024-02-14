@@ -74,6 +74,7 @@ export default function SignInCheck() {
                     }
                 })
                 localStorage.setItem('ddym-refresh-token', res.refresh_token);
+                // router.replace('/');
             })
         }
 
