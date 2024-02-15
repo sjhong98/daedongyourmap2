@@ -84,7 +84,7 @@ export default function Profile(props: Props) {
 
     return (
         <div className="flex w-screen h-full">
-            <title>대동, 너의 지도 | 프로필</title>
+            <title>대동, 당신의 지도 | 프로필</title>
             { isModalOpen ? 
                 <div id="outside-view" onClick={handleClickExit} className='fixed w-screen h-[100vh] z-[100] center mt-[-20vh] backdrop-blur-sm'>
                     <div className='bg-stone-800 w-[25vw] h-[35vh] rounded-2xl shadow-2xl'>

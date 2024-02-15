@@ -58,7 +58,7 @@ export default function Edit() {
 
     return (
         <div className="p-12">
-            <title>대동, 너의 지도 | 프로필</title>
+            <title>대동, 당신의 지도 | 프로필</title>
             <p className="text-white text-[2rem]">프로필 수정</p>
             <div className="bg-stone-900 w-[90%] h-[30vh] rounded-2xl center flex-col mt-3">
                 <ProfilePic />

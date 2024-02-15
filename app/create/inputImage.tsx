@@ -30,6 +30,7 @@ export default function InputImage(props:propsType) {
                 );	
             }
         );
+        console.log(e.target.file[0]);
         const resizedImage = await resizeFile(e.target.file[0]);
         temp.push(resizedImage);
         setImage(temp);

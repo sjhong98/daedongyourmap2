@@ -47,7 +47,7 @@ export default function Create() {
     
     return (
         <div className="flex flex-col center bg-stone-800 rounded-2xl w-[40vw] min-h-[60vh] shadow-2xl">
-            <title>대동, 너의 지도 | 게시물 작성</title>
+            <title>대동, 당신의 지도 | 게시물 작성</title>
             { isLoading ? <Loading /> : <></> }
             <p className="text-3xl lml text-white mb-8">New Post</p>
             <PointSelection />
