@@ -10,11 +10,11 @@ import FB from '@mui/icons-material/FavoriteBorder';
 import Delete from '@mui/icons-material/DeleteOutline';
 import profile from '@/public/defaultProfilePic.jpeg';
 import { getAuth } from "firebase/auth";
-import { deletePost } from "./deletePost";
-import { removeLike } from "./removeLike";
-import { uploadLike } from "./uploadLike";
+import { deletePost } from "./functions/deletePost";
+import { removeLike } from "./functions/removeLike";
+import { uploadLike } from "./functions/uploadLike";
 import { useEffect, useState } from "react";
-import { UploadComment } from "./uploadComment";
+import { UploadComment } from "./functions/uploadComment";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getProfile } from "@/app/functions/getProfile";
 import { curPostStore, idTokenStore, isPostViewOpenStore, userDataStore } from "../../recoilContextProvider";
@@ -152,18 +152,15 @@ export default function PostView() {
         }
     }
 
-    const fetchUserPost = () => {
-        const auth = getAuth();
-        auth.onAuthStateChanged((user) => {
-
-        })
-    }
-
     const handleClickDelete = () => {
         if(window.confirm("게시물을 삭제하시겠습니까?")) {
-            deletePost(postId);
-            setIsOpen(false);
-            setPost(null);
+            if(post?.name !== undefined) {
+                deletePost(postId, post?.name, post?.photo.length)
+                .then(() => {
+                    setIsOpen(false);
+                    setPost(null);
+                })
+            }
         }
     }
 
