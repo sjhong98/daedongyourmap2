@@ -19,15 +19,12 @@ import jn from '@/public/map/jn.png';
 import jb from '@/public/map/jb.png'; 
 import bg from '@/public/map/bg.png';
 import styled from 'styled-components';
+import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/navigation';
 import Image, { StaticImageData } from 'next/image';
 import { selectedPointStore } from '@/app/recoilContextProvider';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-interface propsType{
-    setState?: Dispatch<SetStateAction<string>>
-}
 
 // ssr로 히트맵 정보 받기
 export default function Map() {
@@ -52,7 +49,7 @@ export default function Map() {
     }
 
     return (
-        <MovingMap x={cursorX*0.1} y={cursorY*0.2} onMouseOver={handleOver} className='flex justify-center items-center w-[300px] h-[200px]'>
+        <MovingMap x={cursorX*0.1} y={cursorY*0.2} onMouseOver={handleOver} className='flex justify-center items-center w-[300px] h-[200px] scale-[1.4]'>
             <Image src={bg} alt='bg' className=' absolute mt-[450px] ml-[300px] rotate-[-2deg] z-[1] scale-[4.5]' />
             <MapImage src={ic} alt="incheon" width={22} position='map-elem mb-[40px] mr-[160px] z-[100]' />
             <MapImage src={ic2} alt="incheon" width={24} position='map-elem mb-[-32px] ml-[-150px] z-[100]' />

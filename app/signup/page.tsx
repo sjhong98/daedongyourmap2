@@ -1,7 +1,7 @@
 'use client';
 
 import Image from "next/image";
-import Input from "../modules/input";
+import Input from "../components/input";
 import Logo from '@/public/daedong.png';
 import { useState } from "react";
 import { Button } from "@mui/material";
