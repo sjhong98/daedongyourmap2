@@ -1,14 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import AddIcon from '@mui/icons-material/Add';
 import LogoutIcon from '@mui/icons-material/Logout';
-import profilePic from '@/public/defaultProfilePic.jpeg';
+import defaultProfilePic from '@/public/defaultProfilePic.jpeg';
 import { Button } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { styled } from "@mui/material/styles";
-import AddIcon from '@mui/icons-material/Add';
 import { getAuth, signOut } from "firebase/auth";
 import { firebaseConfig } from "@/firestore/config";
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -16,11 +16,8 @@ import { ProfileType, idTokenStore, isLoginStore, profileStore } from "@/app/rec
 
 export default function SignInCheck() {
     const router = useRouter();
-    let email:string | null;
-    if(typeof window !== 'undefined' && localStorage !== null)
-        email = localStorage.getItem('ddym-email');
     const setIdToken = useSetRecoilState(idTokenStore);
-    const [proPic, setProPic] = useState<any>("");
+    const [profilePic, setProfilePic] = useState<any>("");
     const [isLogin, setIsLogin] = useRecoilState(isLoginStore);
     const [displayName, setDisplayName] = useState<string>("");
     const [profile, setProfile] = useRecoilState<ProfileType>(profileStore);
@@ -38,6 +35,7 @@ export default function SignInCheck() {
     }
 
     const handleClickProfile = () => {
+        let email = localStorage.getItem('ddym-email');
         router.push(`/profile/${email}`);
     }
 
@@ -74,7 +72,6 @@ export default function SignInCheck() {
                     }
                 })
                 localStorage.setItem('ddym-refresh-token', res.refresh_token);
-                // router.replace('/');
             })
         }
 
@@ -88,9 +85,9 @@ export default function SignInCheck() {
     }, [])
 
     useEffect(() => {
-        console.log(profile);
-        if(profile.photoURL) setProPic(profile.photoURL);
-        else setProPic(profilePic);
+        let email = localStorage.getItem('ddym-email');
+        if(profile.photoURL) setProfilePic(profile.photoURL);
+        else setProfilePic(defaultProfilePic);
 
         if(profile.displayName) setDisplayName(profile.displayName);
         else if(email) setDisplayName(email);
@@ -104,7 +101,7 @@ export default function SignInCheck() {
                     <AddIcon className="cursor-pointer mr-4" onClick={handleClickAdd} />
                 </div>
                 <Image 
-                    src={proPic} 
+                    src={profilePic} 
                     width={50} 
                     height={50} 
                     alt="profile" 

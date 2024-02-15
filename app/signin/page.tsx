@@ -59,6 +59,7 @@ export default function SignIn() {
     
     return (
         <div className="center">
+            <title>대동, 너의 지도 | 로그인</title>
             <div className="flex flex-col items-center bg-white shadow-2xl rounded-3xl w-[25vw] h-[60vh]">
                 <Image src={Logo} alt="logo" width={300} className="mt-12 mb-32" />
                 <Input 

@@ -15,6 +15,7 @@ export default async function Board(props: Props) {
 
     return (    
         <div className="flex flex-col items-center">
+            <title>{`대동, 너의 지도 | ${location}`}</title>
             <p className="text-white text-[2rem] mb-6 nnb">{ displayName }</p>
             <PostBoard data={data} data2={data} location={location} />
             <PostView /> 
