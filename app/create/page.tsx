@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { UploadPost } from "@/app/create/uploadPost";
-import { useRecoilValue } from "recoil";
-import { idTokenStore, isLoginStore, selectedPointStore } from "../recoilContextProvider";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { idTokenStore, isLoginStore, isPostViewOpenStore, postCreated, postCreatedStore, selectedPointStore } from "../recoilContextProvider";
 import { UploadImage } from "@/app/create/uploadImage";
 import InputImage from "./inputImage";
 import PointSelection from "./pointSelection";
@@ -15,6 +15,7 @@ export default function Create() {
     const router = useRouter();
     const idToken = useRecoilValue(idTokenStore);
     const isLogin = useRecoilValue(isLoginStore);
+    const setPostCreated = useSetRecoilState(postCreatedStore);
     const [image, setImage] = useState<any[]>([]);
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
@@ -35,7 +36,14 @@ export default function Create() {
         // 게시물 저장 path 가져와 cloud path로 사용
         UploadPost({title, content, idToken, selectedPoint})
         .then((res) => {
-            UploadImage(image, idToken, res.name, selectedPoint, routerToMain);
+            UploadImage(
+                image, 
+                idToken, 
+                res.name, 
+                selectedPoint, 
+                routerToMain, 
+                setPostCreated
+            );
             setIsLoading(true);
         })
     }

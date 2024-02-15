@@ -31,6 +31,11 @@ export interface ProfileType {
     emailVerified: boolean
 }
 
+export const postCreatedStore = atom<boolean>({
+    key:'postCreated',
+    default: false
+})
+
 export const profileStore = atom<any>({
     key:'profile',
     default: {}

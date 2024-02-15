@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { fetchPost } from "./fetchPost";
 import { useEffect, useState } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { curPostStore, isPostViewOpenStore, PostType } from "../recoilContextProvider";
+import { curPostStore, isPostViewOpenStore, postCreatedStore, PostType } from "../recoilContextProvider";
 
 export default function PostBoard( props:{data:PostType[], data2:any, location:string} ) {
     const [target, setTarget] = useState<any>();
@@ -15,6 +15,7 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
     const [endIndex, setEndIndex] = useState<number>(80);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [firstRender, setFirstRender] = useState<boolean>(true);
+    const [postCreated, setPostCreated] = useRecoilState(postCreatedStore);
     const [postViewOpen, setPostViewOpen] = useRecoilState(isPostViewOpenStore);
     
     // postView 열기
@@ -29,7 +30,7 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
 
     // postView 닫히면 post update
     useEffect(() => {
-        if(!firstRender) {
+        if(!firstRender || postCreated) {
             const res = fetchPost(startIndex-40, props.location, endIndex-40);
             res.then((res) => {
                 let temp:any[] = [];
@@ -37,6 +38,7 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
                     temp = [...posts];
                     temp.splice(startIndex-40, 40, ...res);
                     setPosts(temp);
+                    setPostCreated(false);
                     console.log("post updated", res);
                 }
             })

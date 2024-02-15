@@ -9,16 +9,16 @@ import Modify from '@mui/icons-material/Create';
 import FB from '@mui/icons-material/FavoriteBorder';
 import Delete from '@mui/icons-material/DeleteOutline';
 import profile from '@/public/defaultProfilePic.jpeg';
-import { getAuth } from "firebase/auth";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { deletePost } from "./functions/deletePost";
 import { removeLike } from "./functions/removeLike";
 import { uploadLike } from "./functions/uploadLike";
-import { useEffect, useState } from "react";
-import { UploadComment } from "./functions/uploadComment";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getProfile } from "@/app/functions/getProfile";
-import { curPostStore, idTokenStore, isPostViewOpenStore, userDataStore } from "../../recoilContextProvider";
-import { useRouter } from "next/navigation";
+import { UploadComment } from "./functions/uploadComment";
+import { curPostStore, idTokenStore, isPostViewOpenStore, postCreatedStore, userDataStore } from "../../recoilContextProvider";
+
 
 export interface userInfo {
     displayName: string,
