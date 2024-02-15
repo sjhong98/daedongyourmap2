@@ -178,8 +178,8 @@ export default function PostView() {
             onClick={handleClickExit}
             className={`w-screen h-screen center fixed backdrop-blur-lg mt-[-20vh] z-[1000] ${style}`} 
         >
-            <div className="flex w-[60vw] h-[85vh] bg-white shadow-2xl">
-                <div className="flex w-2/3 h-full ">
+            <div className="flex w-[60vw] h-[80vh] bg-white shadow-2xl overflow-hidden">
+                <div className="flex w-2/3 h-full">
                     <PostSlider post={post} />
                 </div>
                 <div className="w-1/3 h-full flex flex-col">

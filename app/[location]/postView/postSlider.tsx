@@ -1,11 +1,10 @@
 'use client';
 
-import { PostType } from "../../recoilContextProvider";
 import Image from "next/image";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useEffect } from "react";
+import { PostType } from "../../recoilContextProvider";
 
 export default function PostSlider(props:{post:PostType | null}) {
     const photo = props.post?.photo;
@@ -36,25 +35,25 @@ export default function PostSlider(props:{post:PostType | null}) {
             <Slider {...settings}>
             { photo?.map((item:any, index:number) => {
                 return (
-                    <div key={index} className="w-[40vw] h-[85vh]">
+                    <div key={index} className="w-[40vw] h-[80vh]">
                         <Image
                             src={item.stringValue}
                             alt="..."
                             width={600}
                             height={600}
-                            className={`object-cover max-h-[85vh]`}
+                            className={`object-cover max-h-[80vh]`}
                         />
                     </div>
             )})}
             </Slider>
             :
-            <div key={0} className="w-[40vw] h-[85vh] flex items-center">
+            <div key={0} className="w-[40vw] h-[80vh] flex items-center">
                 <Image
                     src={photo!==undefined && photo[0].stringValue}
                     alt="..."
                     width={600}
                     height={800}
-                    className={`object-cover max-h-[85vh]`}
+                    className={`object-cover max-h-[80vh]`}
                 />
             </div>
 

@@ -1,15 +1,15 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { UploadPost } from "@/app/create/uploadPost";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { idTokenStore, isLoginStore, isPostViewOpenStore, postCreated, postCreatedStore, selectedPointStore } from "../recoilContextProvider";
-import { UploadImage } from "@/app/create/uploadImage";
 import InputImage from "./inputImage";
+import styled from "styled-components";
+import Loading from "../components/loading";
 import PointSelection from "./pointSelection";
 import { useRouter } from "next/navigation";
-import Loading from "../components/loading";
-import styled from "styled-components";
+import { useEffect, useState } from "react";
+import { UploadPost } from "@/app/create/uploadPost";
+import { UploadImage } from "@/app/create/uploadImage";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { idTokenStore, isLoginStore, postCreatedStore, selectedPointStore } from "../recoilContextProvider";
 
 export default function Create() {
     const router = useRouter();
