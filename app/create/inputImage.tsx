@@ -1,7 +1,8 @@
 'use client';
 
-import { Dispatch, SetStateAction, useEffect, useReducer, useState } from "react"
+import { Dispatch, SetStateAction } from "react"
 import styled from "styled-components"
+import Resizer from "react-image-file-resizer";
 import ClearIcon from '@mui/icons-material/Clear';
 
 interface propsType{
@@ -12,9 +13,25 @@ interface propsType{
 export default function InputImage(props:propsType) {
     const {image, setImage} = props;
 
-    const handleImageAdd = (e:any) => {
+    const handleImageAdd = async (e:any) => {
         let temp = [...image];
-        temp.push(e.target.files[0]);
+
+        const resizeFile = (file:any) =>
+            new Promise((resolve) => {
+                Resizer.imageFileResizer(
+                    file,
+                    300,
+                    300,
+                    "JPEG",
+                    60,
+                    0,
+                    (uri) => { resolve(uri); },
+                    "blob"
+                );	
+            }
+        );
+        const resizedImage = await resizeFile(e.target.file[0]);
+        temp.push(resizedImage);
         setImage(temp);
     }
 
