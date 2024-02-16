@@ -20,36 +20,42 @@ export function UploadImage(
     let temp:any[] = [];
 
     // storage에 file upload
-    file.map((item:any, index:number) => {
-        let imageId = `${documentId}-${index}`;
-        storageRef = ref(storage, imageId);
-        uploadBytes(storageRef, item)
-        .then((snapshot) => {
-            fullPath = snapshot.metadata.fullPath;
-
-            // storage에 업로드된 URL 받기
-            getDownloadURL(ref(storage, fullPath))
-            .then((res) => {
+    const uploadFilesSequentially = async () => {
+        for (let index = 0; index < file.length; index++) {
+            let item = file[index];
+            let imageId = `${documentId}-${index}`;
+            storageRef = ref(storage, imageId);
+    
+            try {
+                const snapshot = await uploadBytes(storageRef, item);
+                const fullPath = snapshot.metadata.fullPath;
+    
+                // storage에 업로드된 URL 받기
+                const res = await getDownloadURL(ref(storage, fullPath));
+    
                 temp.push({ stringValue: res });
                 let data = { fields: { photo: { arrayValue: { values: temp } } } }
                 let url = fullPath.slice(0, -2);
-
+    
                 // storage URL -> DB에 저장
-                fetch(`https://firestore.googleapis.com/v1/${url}?updateMask.fieldPaths=photo`, {
+                await fetch(`https://firestore.googleapis.com/v1/${url}?updateMask.fieldPaths=photo`, {
                     method: 'PATCH',
                     headers: {
                         "Authorization": `Bearer ${idToken}`
                     },
                     body: JSON.stringify(data)
-                })
-                .then(() => {
-                    setPostCreated(true);
-                    routerToMain(selectedPoint);
-                })
-                .catch((err)=>
-                    console.log(err)
-                );
-            })
-        })
-    })
+                });
+    
+                // 현재 파일 업로드가 완료된 후에 다음 파일로 이동
+            } catch (error) {
+                console.log(error);
+                // 에러 처리 로직 추가
+            }
+        }
+    
+        setPostCreated(true);
+        routerToMain(selectedPoint);
+    };
+    
+    uploadFilesSequentially();
 }

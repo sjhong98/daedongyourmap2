@@ -18,8 +18,6 @@ import gj from '@/public/map/gj.png';
 import jn from '@/public/map/jn.png'; 
 import jb from '@/public/map/jb.png'; 
 import bg from '@/public/map/bg.png';
-import styled from 'styled-components';
-import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/navigation';
 import Image, { StaticImageData } from 'next/image';
@@ -28,28 +26,8 @@ import { selectedPointStore } from '@/app/recoilContextProvider';
 
 // ssr로 히트맵 정보 받기
 export default function Map() {
-    const [cursorX, setCursorX] = useState(0);
-    const [cursorY, setCursorY] = useState(0);
-    let pivotX:number, pivotY:number;
-    // const [selectedIndex, setSelectedIndex] = useState("");
-
-    const handleOver = () => {
-        if(window !== undefined) {
-            window.addEventListener('mousemove', onMouseMove);
-        }
-    }
-    
-    const onMouseMove = (event:any) => {
-        if(window !== undefined) {
-            pivotX = window.innerWidth / 2;
-            pivotY = window.innerHeight / 2;
-        }
-        setCursorX(pivotX - event.clientX);
-        setCursorY(pivotY - event.clientY);
-    }
-
     return (
-        <MovingMap x={cursorX*0.1} y={cursorY*0.2} onMouseOver={handleOver} className='flex justify-center items-center w-[300px] h-[200px] scale-[1.4]'>
+        <div className='flex justify-center items-center w-[300px] h-[200px]'>
             <Image src={bg} alt='bg' className=' absolute mt-[450px] ml-[300px] rotate-[-2deg] z-[1] scale-[4.5]' />
             <MapImage src={ic} alt="incheon" width={22} position='map-elem mb-[40px] mr-[160px] z-[100]' />
             <MapImage src={ic2} alt="incheon" width={24} position='map-elem mb-[-32px] ml-[-150px] z-[100]' />
@@ -68,7 +46,7 @@ export default function Map() {
             <MapImage src={us} alt="ulsan" width={58} position='map-elem mt-[550px] ml-[-22px] rotate-[25deg] z-[100]' /> 
             <MapImage src={bs} alt="busan" width={60} position='map-elem mt-[630px] ml-[-80px] rotate-[-30deg] z-[110]' />
             <MapImage src={jj} alt="jeju" width={100} position='map-elem mt-[980px] ml-[-370px] z-[80]' />
-        </MovingMap>
+        </div>
     )
 }
 
@@ -106,8 +84,3 @@ function MapImage(props:MapImagePropsType) {
             onMouseOut={handleMouseOut}
             />
 }
-
-const MovingMap = styled.div<{x:number, y:number}>`
-    transform: translate(${(props) => props.x}px, ${(props) => props.y}px);
-    scale: 1.4;
-`

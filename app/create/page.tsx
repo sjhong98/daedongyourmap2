@@ -52,6 +52,10 @@ export default function Create() {
         if(title !== "" && image.length > 0 && selectedPoint !== "") setReadyToUpload(true);
         else setReadyToUpload(false);
     }, [title, image])
+
+    useEffect(() => {
+        console.log("image : ", image);
+    }, [image])
     
     return (
         <div className="flex flex-col center bg-stone-800 rounded-2xl w-[40vw] min-h-[60vh] shadow-2xl">
