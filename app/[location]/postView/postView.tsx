@@ -107,7 +107,7 @@ export default function PostView() {
         // 영어 지역명 -> 한글 지역명
         let switchedPoint = swtichName(selectedPoint);
         if(switchedPoint !== undefined)
-            setDisplayName(switchedPoint);
+            setDisplayPoint(switchedPoint);
     }, [selectedPoint])
 
     const handleClickExit = (e:any) => {
@@ -193,8 +193,16 @@ export default function PostView() {
                     <div className="p-6 flex-1">
                         {/* 작성자 정보 */}
                         <div className="">
-                            <div className="flex nnn">
-                                { userData?.photoURL === undefined ? <Image src={profile} alt="profile" className="rounded-full w-[1.5vw] mr-3 mt-1" /> : <></>}
+                            <div className="flex nnl">
+                                { userData?.photoURL === undefined ? 
+                                    <Image 
+                                        src={profile} 
+                                        alt="profile" 
+                                        className="rounded-full w-[1.5vw] h-[1.5vw] mr-3 mt-1 aspect-square object-cover" 
+                                    /> 
+                                    : 
+                                    <></>
+                                }
                                 <div className="flex flex-col">
                                     { userData?.displayName === undefined ? <p>{displayName}</p> : <>{userData.displayName}</>}
                                     <p className="text-[0.7rem] text-gray-500">{displayPoint}</p>

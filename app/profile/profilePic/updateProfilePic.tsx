@@ -4,8 +4,7 @@ import { getAuth, updateProfile } from "firebase/auth";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { Dispatch } from "react";
 
-export const updateProfilePic = (file:any, setImage:Dispatch<any>, idToken:string, email:string) => {
-    setImage(URL.createObjectURL(file));
+export const updateProfilePic = (file:any, idToken:string, email:string) => {
     const auth = getAuth();
     auth.onAuthStateChanged((user) => {
         if(user && user.email) {

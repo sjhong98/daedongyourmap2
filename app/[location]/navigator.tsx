@@ -34,7 +34,7 @@ export default function Naviagator() {
 
     return (
         <div className="fixed flex ml-[-60vw] w-[40vw]">
-            <div className={`flex flex-col scale-[1.2] ${openAnim}`}>
+            <div className={`flex flex-col scale-[1.2] opacity-0 ${openAnim}`}>
                 <Map />
                 <p className="text-white">{displayPoint}</p>
             </div>

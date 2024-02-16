@@ -58,11 +58,13 @@ export default function Create() {
     }, [image])
     
     return (
-        <div className="flex flex-col center bg-stone-800 rounded-2xl w-[40vw] min-h-[60vh] shadow-2xl">
+        <div className="flex flex-col center bg-stone-800 rounded-2xl w-[40vw] min-h-[60vh] shadow-2xl nnl">
             <title>대동, 당신의 지도 | 게시물 작성</title>
             { isLoading ? <Loading /> : <></> }
             <p className="text-3xl lml text-white mb-8">New Post</p>
-            <PointSelection />
+            <div className="w-[20vw]">
+                <PointSelection />
+            </div>
             <InputImage image={image} setImage={setImage} />
             <Input 
                 value={title} 

@@ -11,13 +11,13 @@ export default function ProfilePic() {
     const [image, setImage] = useState<any>();
     const profile = useRecoilValue(profileStore);
     const idToken = useRecoilValue(idTokenStore);
-    let email:string;
-    if(typeof window !== 'undefined' && localStorage !== null)
-        localStorage.getItem('ddym-email');
 
     const handleImageAdd = (e:any) => {
-        if(email)
-            updateProfilePic(e.target.files[0], setImage, idToken, email)
+        let email = localStorage.getItem('ddym-email');
+        if(email) {
+            setImage(URL.createObjectURL(e.target.files[0]));
+            updateProfilePic(e.target.files[0], idToken, email);
+        }
     }
 
     useEffect(() => {

@@ -780,6 +780,9 @@ video {
 .h-screen {
   height: 100vh;
 }
+.h-\[1\.5vw\] {
+  height: 1.5vw;
+}
 .max-h-\[80vh\] {
   max-height: 80vh;
 }
@@ -1130,20 +1133,14 @@ video {
 }
 
 @font-face {
-  font-family: 'nnb';
-  font-style: normal;
-  font-weight: 700;
-  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.eot');
-  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebBold.ttf') format('truetype')
- }
+  font-family: nnl;
+  src: url(/_next/static/media/nnl.c5f442a7.ttf);
+}
 
 @font-face {
-  font-family: 'nnn';
-  font-style: normal;
-  font-weight: 300;
-  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.eot');
-  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWebLight.ttf') format('truetype');
- }
+  font-family: nnb;
+  src: url(/_next/static/media/nnb.d6c2427e.ttf);
+}
 
 .nnb {
   font-family: 'nnb';
@@ -1214,7 +1211,11 @@ p, pre, a{
   0% {
     transform: translateX(0);
   }
+  1% {
+    opacity: 1;
+  }
   100% {
+    opacity: 1;
     transform: translateX(50vw);
   }
 }
@@ -1222,8 +1223,16 @@ p, pre, a{
 @keyframes navigator-close-anim {
   0% {
     transform: translateX(50vw);
+    opacity: 1
+  }
+  98% {
+    opacity: 1;
+  }
+  99% {
+    opacity: 0;
   }
   100% {
+    opacity: 0;
     transform: translateX(0);
   }
 }
