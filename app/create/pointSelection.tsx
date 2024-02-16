@@ -1,18 +1,18 @@
 'use client';
 
-import { Dispatch, SetStateAction } from "react";
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { useEffect } from 'react';
 import { useRecoilState } from "recoil";
 import { selectedPointStore } from "../recoilContextProvider";
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-interface propsType {
-    selectedPoint: string,
-    setSelectedPoint: Dispatch<SetStateAction<string>>
-}
-
-export default function PointSelection() {
+export default function PointSelection( props: { curSelectedPoint?: string } ) {
     const [selectedPoint, setSelectedPoint] = useRecoilState(selectedPointStore);
+
+    useEffect(() => {
+        if(props.curSelectedPoint)
+            setSelectedPoint(props.curSelectedPoint);
+    }, [])
 
     const handleSelectChange = (e:SelectChangeEvent) => {
         setSelectedPoint(e.target.value as string);
@@ -23,7 +23,7 @@ export default function PointSelection() {
             value={selectedPoint}
             label="지역"
             onChange={handleSelectChange}
-            className="w-[20vw]"
+            className="w-full"
             sx={{backgroundColor:'white', height: '3vh', marginBottom:'2vh'}}
         >
             <MenuItem value="seoul">서울</MenuItem>

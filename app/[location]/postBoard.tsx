@@ -2,14 +2,18 @@
 
 import Image from "next/image";
 import styled from "styled-components";
+import Map from "../components/map/map";
 import { fetchPost } from "./fetchPost";
 import { useEffect, useState } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { curPostStore, isPostViewOpenStore, postCreatedStore, PostType } from "../recoilContextProvider";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { curPostStore, isPostViewOpenStore, postCreatedStore, PostType, selectedPointStore } from "../recoilContextProvider";
+import Naviagator from "./navigator";
+
 
 export default function PostBoard( props:{data:PostType[], data2:any, location:string} ) {
     const [target, setTarget] = useState<any>();
     const setCurPost = useSetRecoilState(curPostStore);
+    const selectedPoint = useRecoilValue(selectedPointStore);
     const [posts, setPosts] = useState<PostType[] | undefined>(props.data);
     const [startIndex, setStartIndex] = useState<number>(40);
     const [endIndex, setEndIndex] = useState<number>(80);
@@ -84,8 +88,9 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
       }, [target, endIndex]);
 
     return (
-        <div>
-            <div className="grid grid-cols-3 gap-1">
+        <div className="flex">
+            <Naviagator />
+            <div className="grid grid-cols-3 gap-1 w-[50vw]">
                 { posts!==undefined && posts.map((item:PostType, index:number) => {
                     return (
                     <Wrapper 

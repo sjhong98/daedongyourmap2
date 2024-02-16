@@ -1,7 +1,9 @@
 'use client';
 
-import { PostType } from "@/app/recoilContextProvider";
+import PointSelection from "@/app/create/pointSelection";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Dispatch, useEffect, useState } from "react";
+import { PostType, isPostViewOpenStore, selectedPointStore } from "@/app/recoilContextProvider";
 
 type Prop = {
     post:PostType|null, 
@@ -13,6 +15,7 @@ type Prop = {
 
 export default function PostContent(props:Prop) {
     const {post, isModify, postId, idToken, setIsModify} = props;
+    const selectedPoint = useRecoilValue(selectedPointStore);
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
     const inputStyle = "text-black focus:outline-none rounded-md border-[1px] w-[12vw] p-2"
@@ -25,34 +28,22 @@ export default function PostContent(props:Prop) {
     }, [post])
 
     const handleClickModify = () => {  
-        fetch(`https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents/posts/${postId}?updateMask.fieldPaths=title`, {
+        fetch(`https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents/posts/${postId}?updateMask.fieldPaths=title&updateMask.fieldPaths=content&updateMask.fieldPaths=point`, {
             method: 'PATCH',
             headers: {
                 "Authorization": `Bearer ${idToken}`
             },
             body: JSON.stringify({
                 fields: {
-                    title: { stringValue: title }
-                }
-            })
-        })
-        .then(() => { console.log("title 수정 완료"); })
-        .catch((err)=> console.log(err) );
-    
-        fetch(`https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents/posts/${postId}?updateMask.fieldPaths=content`, {
-            method: 'PATCH',
-            headers: {
-                "Authorization": `Bearer ${idToken}`
-            },
-            body: JSON.stringify({
-                fields: {
-                    content: { stringValue: content }
+                    title: { stringValue: title },
+                    content: { stringValue: content },
+                    point: { stringValue: selectedPoint }
                 }
             })
         })
         .then(() => { 
-            console.log("content 수정 완료"); 
-            setIsModify(false); 
+            console.log("수정 완료"); 
+            setIsModify(false);
         })
         .catch((err)=> console.log(err) );
     }
@@ -61,6 +52,7 @@ export default function PostContent(props:Prop) {
         <div>
         { isModify ? 
             <div>
+                <PointSelection curSelectedPoint={post?.point} />
                 <input 
                     value={title} 
                     onChange={(e)=>setTitle(e.target.value)} 

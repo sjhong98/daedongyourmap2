@@ -82,3 +82,29 @@ body {
 p, pre, a{
   color: black;
 }
+
+@keyframes navigator-open-anim {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(50vw);
+  }
+}
+
+@keyframes navigator-close-anim {
+  0% {
+    transform: translateX(50vw);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.navigator-open {
+  animation: navigator-open-anim 0.5s ease forwards;
+}
+
+.navigator-close {
+  animation: navigator-close-anim 0.5s ease forwards;
+}

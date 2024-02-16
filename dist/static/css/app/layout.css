@@ -579,6 +579,9 @@ video {
 .ml-1 {
   margin-left: 0.25rem;
 }
+.ml-10 {
+  margin-left: 2.5rem;
+}
 .ml-2 {
   margin-left: 0.5rem;
 }
@@ -587,9 +590,6 @@ video {
 }
 .ml-4 {
   margin-left: 1rem;
-}
-.ml-8 {
-  margin-left: 2rem;
 }
 .ml-\[-105px\] {
   margin-left: -105px;
@@ -633,6 +633,9 @@ video {
 .ml-\[-40px\] {
   margin-left: -40px;
 }
+.ml-\[-60vw\] {
+  margin-left: -60vw;
+}
 .ml-\[-80px\] {
   margin-left: -80px;
 }
@@ -666,11 +669,17 @@ video {
 .mt-12 {
   margin-top: 3rem;
 }
+.mt-2 {
+  margin-top: 0.5rem;
+}
 .mt-3 {
   margin-top: 0.75rem;
 }
 .mt-4 {
   margin-top: 1rem;
+}
+.mt-52 {
+  margin-top: 13rem;
 }
 .mt-6 {
   margin-top: 1.5rem;
@@ -871,6 +880,11 @@ video {
   --tw-rotate: 6deg;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+.scale-\[1\.2\] {
+  --tw-scale-x: 1.2;
+  --tw-scale-y: 1.2;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
 .scale-\[1\.4\] {
   --tw-scale-x: 1.4;
   --tw-scale-y: 1.4;
@@ -910,9 +924,6 @@ video {
 }
 .overflow-auto {
   overflow: auto;
-}
-.overflow-hidden {
-  overflow: hidden;
 }
 .rounded-2xl {
   border-radius: 1rem;
@@ -1070,6 +1081,10 @@ video {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
 }
+.text-gray-500 {
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+}
 .text-red-500 {
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity));
@@ -1193,6 +1208,32 @@ body {
 
 p, pre, a{
   color: black;
+}
+
+@keyframes navigator-open-anim {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(50vw);
+  }
+}
+
+@keyframes navigator-close-anim {
+  0% {
+    transform: translateX(50vw);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.navigator-open {
+  animation: navigator-open-anim 0.5s ease forwards;
+}
+
+.navigator-close {
+  animation: navigator-close-anim 0.5s ease forwards;
 }
 
 .focus\:outline-none:focus {

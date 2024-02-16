@@ -13,11 +13,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { deletePost } from "./functions/deletePost";
 import { removeLike } from "./functions/removeLike";
-import { uploadLike } from "./functions/uploadLike";
+import { uploadLike } from "./uploadLike";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getProfile } from "@/app/functions/getProfile";
-import { UploadComment } from "./functions/uploadComment";
-import { curPostStore, idTokenStore, isPostViewOpenStore, postCreatedStore, userDataStore } from "../../recoilContextProvider";
+import { UploadComment } from "./uploadComment";
+import { curPostStore, idTokenStore, isPostViewOpenStore, postCreatedStore, selectedPointStore, userDataStore } from "../../recoilContextProvider";
+import { swtichName } from "@/app/functions/switchName";
 
 
 export interface userInfo {
@@ -31,6 +32,7 @@ export default function PostView() {
     const router = useRouter();
     const idToken = useRecoilValue(idTokenStore);
     const userData = useRecoilValue(userDataStore);
+    const selectedPoint = useRecoilValue(selectedPointStore);
     const [post, setPost] = useRecoilState(curPostStore);
     const [likes, setLikes] = useState<any>([0]);
     const [comment, setComment] = useState<string>("");
@@ -39,6 +41,7 @@ export default function PostView() {
     const [postId, setPostId] = useState<string>("");
     const [style, setStyle] = useState<string>("invisible");
     const [displayName, setDisplayName] = useState<string>("");
+    const [displayPoint, setDisplayPoint] = useState<string>("");
     const [isOpen, setIsOpen] = useRecoilState(isPostViewOpenStore);
     const [isModify, setIsModify] = useState<boolean>(false);
     const btnStyle = {color:'black', width:20, cursor:'pointer'};
@@ -100,6 +103,13 @@ export default function PostView() {
         else setStyle("invisible");
     }, [isOpen])
 
+    useEffect(() => {
+        // 영어 지역명 -> 한글 지역명
+        let switchedPoint = swtichName(selectedPoint);
+        if(switchedPoint !== undefined)
+            setDisplayName(switchedPoint);
+    }, [selectedPoint])
+
     const handleClickExit = (e:any) => {
         // 바깥 영역 클릭시 모달 제거 -> post 갱신해야 함
         if(e.target.id === 'outside-view') {
@@ -120,16 +130,12 @@ export default function PostView() {
     }
 
     const handleLikes = () => {
-        if(post && likes !== "") {
-            uploadLike(post, idToken, likes, setLikes)
-        } else {
-            setDidLike(true);
-        }
+        if(post && likes !== "") uploadLike(post, idToken, likes, setLikes);
+        else setDidLike(true);
     }
 
     const handleUnlikes = () => {
-        if(post) 
-            removeLike(post, idToken, likes, setLikes)
+        if(post) removeLike(post, idToken, likes, setLikes)
     }
 
     const handleCommentInput = () => {
@@ -189,9 +195,12 @@ export default function PostView() {
                         <div className="">
                             <div className="flex nnn">
                                 { userData?.photoURL === undefined ? <Image src={profile} alt="profile" className="rounded-full w-[1.5vw] mr-3 mt-1" /> : <></>}
-                                { userData?.displayName === undefined ? <p>{displayName}</p> : <>{userData.displayName}</>}
+                                <div className="flex flex-col">
+                                    { userData?.displayName === undefined ? <p>{displayName}</p> : <>{userData.displayName}</>}
+                                    <p className="text-[0.7rem] text-gray-500">{displayPoint}</p>
+                                </div>
                             </div>
-                            <div className="mt-1 ml-8">
+                            <div className="mt-2 ml-10">
                                 <PostContent 
                                     post={post} 
                                     setIsModify={setIsModify}

@@ -23,7 +23,6 @@ import { useRouter } from 'next/navigation';
 import Image, { StaticImageData } from 'next/image';
 import { selectedPointStore } from '@/app/recoilContextProvider';
 
-
 // ssr로 히트맵 정보 받기
 export default function Map() {
     return (
@@ -36,7 +35,7 @@ export default function Map() {
             <MapImage src={gw} alt="gangwon" width={270} position='map-elem mb-[69px] ml-[-8px] z-[80]' />
             <MapImage src={cn} alt="chungnam" width={170} position='map-elem mt-[315px] ml-[-375px] rotate-[-10deg] z-[100]' />
             <MapImage src={dj} alt="daejeon" width={35} position='map-elem ml-[-40px] mb-[-340px] rotate-[6deg] z-[100]' />
-            <MapImage src={cb} alt="chungnam" width={162} position='map-elem ml-[-32px] mb-[-253px] rotate-[-19deg] z-[80]' />
+            <MapImage src={cb} alt="chungbuk" width={162} position='map-elem ml-[-32px] mb-[-253px] rotate-[-19deg] z-[80]' />
             <MapImage src={kb} alt="kyungbuk" width={209} position='map-elem mt-[330px] ml-[-105px] rotate-[-2deg] z-[90]' />
             <MapImage src={dg} alt="daegu" width={70} position='map-elem mt-[490px] ml-[-155px] rotate-[-47deg] z-[100]' />
             <MapImage src={jb} alt="jeonbuk" width={162} position='map-elem mb-[-500px] ml-[-275px] z-[80]' />
