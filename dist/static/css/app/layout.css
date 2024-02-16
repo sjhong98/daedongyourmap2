@@ -783,6 +783,9 @@ video {
 .h-\[1\.5vw\] {
   height: 1.5vw;
 }
+.h-\[120vh\] {
+  height: 120vh;
+}
 .max-h-\[80vh\] {
   max-height: 80vh;
 }
@@ -850,6 +853,9 @@ video {
   width: 100%;
 }
 .w-screen {
+  width: 100vw;
+}
+.w-\[100vw\] {
   width: 100vw;
 }
 .flex-1 {

@@ -11,7 +11,7 @@ type Props = {
 export default async function Board(props: Props) {
     const location = props.params.location;
     let displayName = swtichName(location);
-    let data = await fetchPost(0, location);
+    let data = await fetchPost(location);
 
     return (    
         <div className="flex flex-col items-center">

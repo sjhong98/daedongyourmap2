@@ -14,9 +14,8 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
     const [target, setTarget] = useState<any>();
     const setCurPost = useSetRecoilState(curPostStore);
     const selectedPoint = useRecoilValue(selectedPointStore);
-    const [posts, setPosts] = useState<PostType[] | undefined>(props.data);
-    const [startIndex, setStartIndex] = useState<number>(40);
-    const [endIndex, setEndIndex] = useState<number>(80);
+    const [posts, setPosts] = useState<PostType[]>(props.data);
+    const [startIndex, setStartIndex] = useState<number>(30);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [firstRender, setFirstRender] = useState<boolean>(true);
     const [postCreated, setPostCreated] = useRecoilState(postCreatedStore);
@@ -35,12 +34,17 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
     // postView 닫히면 post update
     useEffect(() => {
         if(!firstRender || postCreated) {
-            const res = fetchPost(startIndex-40, props.location, endIndex-40);
+            let startUpdateIndex;
+            if(posts[startIndex-1] !== undefined) 
+                startUpdateIndex = +posts[startIndex-1].createTime;        // 모든 게시물 최소 30개씩 만들고, 제대로 업데이트되는지 확인
+            else 
+                startUpdateIndex = +posts[posts.length-30].createTime;
+            const res = fetchPost(props.location, startUpdateIndex);
             res.then((res) => {
                 let temp:any[] = [];
                 if(posts !== undefined) {
                     temp = [...posts];
-                    temp.splice(startIndex-40, 40, ...res);
+                    temp.splice(startIndex-30, 30, ...res);
                     setPosts(temp);
                     setPostCreated(false);
                     console.log("post updated", res);
@@ -57,16 +61,15 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
         }
 
         const handleFetchData = ([entry]:any) => {
-            if(entry.isIntersecting) {
-                console.log("진입", startIndex, endIndex);
-                const res = fetchPost(startIndex, props.location, endIndex);
+            // posts[startIndex-1] !== undefined일 경우 -> 더 이상 게시물이 없는 경우
+            if(entry.isIntersecting && posts[startIndex-1] !== undefined) {
+                const res = fetchPost(props.location, +posts[startIndex-1].createTime);
                 res.then((res) => {
                     let temp:any[] = [];
                     if(posts !== undefined) {
                         temp = [...posts, ...res];
                         setPosts(temp);
-                        setStartIndex((prev)=>prev+40);
-                        setEndIndex((prev)=>prev+40);
+                        setStartIndex(prev => prev+30);
                         setIsLoading(true);
                         setTimeout(() => {
                             setIsLoading(false);
@@ -85,37 +88,40 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
           if(observer)
           observer.disconnect();
         };
-      }, [target, endIndex]);
+    }, [target, startIndex]);
+
+      useEffect(() => {
+        console.log("startIndex : ", startIndex);
+      }, [startIndex])
 
     return (
-        <div className="flex">
-            <Naviagator />
-            <div className="grid grid-cols-3 gap-1 w-[50vw]">
-                { posts!==undefined && posts.map((item:PostType, index:number) => {
-                    return (
-                    <Wrapper 
-                        key={index} 
-                        className="center"
-                        onClick={()=>handleClickPost(item)}
-                    >
-                        <p className="absolute text-white nnn opacity-0 z-[100]">{item.title}</p>
-                        <div>
-                            <Image 
-                                src={item.photo!==undefined && item.photo[0].stringValue} 
-                                alt={item.title} 
-                                width={400} 
-                                height={400} 
-                                className="aspect-square object-cover object-center w-[20vw]"
-                            />
-                        </div>
-                    </Wrapper>
-                    )
-                })}
+        <div className="flex flex-col">
+            <div className="flex-row w-full">
+                <Naviagator />
+                <div className="grid grid-cols-3 gap-1 w-[50vw]">
+                    { posts!==undefined && posts.map((item:PostType, index:number) => {
+                        return (
+                        <Wrapper 
+                            key={index} 
+                            className="center"
+                            onClick={()=>handleClickPost(item)}
+                        >
+                            <p className="absolute text-white nnn opacity-0 z-[100]">{item.title}</p>
+                            <div>
+                                <Image 
+                                    src={item.photo!==undefined && item.photo[0].stringValue} 
+                                    alt={item.title} 
+                                    width={400} 
+                                    height={400} 
+                                    className="aspect-square object-cover object-center w-[20vw]"
+                                />
+                            </div>
+                        </Wrapper>
+                        )
+                    })}
+                </div>
             </div>
-            <div className="flex flex-col">
-                <div className="w-full h-[100vh]" />
-                {/* { isLoading ? <></> : <div ref={setTarget} className="w-screen h-[10vh] bg-red-500" /> } */}
-            </div>
+            { isLoading ? <></> : <div ref={setTarget} className="w-full h-[10vh] bg-red-500" /> }
         </div>
     )
 }
