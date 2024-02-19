@@ -5,8 +5,7 @@ export const getProfile = async (email:string) => {
     });
     const data = await profile.json();
     let extract;
-    if(data.fields !== undefined) {
-        console.log(data);       
+    if(data.fields !== undefined) {     
         extract = {
             displayName: data.fields.displayName.stringValue,
             photoURL: data.fields.photoURL.stringValue,

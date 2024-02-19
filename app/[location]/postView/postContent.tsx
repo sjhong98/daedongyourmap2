@@ -72,7 +72,7 @@ export default function PostContent(props:Prop) {
             </div>
             :
             <div>
-                <p className="nnb">{title}</p> 
+                <pre className="nnb">{title}</pre> 
                 <pre className="text-[0.8rem] nnn">{content}</pre>
             </div>
         }

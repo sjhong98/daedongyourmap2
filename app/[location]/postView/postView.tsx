@@ -19,6 +19,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { getProfile } from "@/app/functions/getProfile";
 import { UploadComment } from "./functions/uploadComment";
 import { curPostStore, idTokenStore, isPostViewOpenStore, postCreatedStore, selectedPointStore, userDataStore } from "../../recoilContextProvider";
+import { DeleteComment } from "./functions/deleteComment";
 
 
 export interface userInfo {
@@ -68,7 +69,7 @@ export default function PostView() {
                 setPostId(splitted[6]);
             }
 
-            // comments의 사용자 정보 가져오고 display하기
+            // comments의 사용자 정보 가져오고 UI 상태 업데이트
             post.comments.map((item:any) => {
                 let email = item.mapValue.fields.user.stringValue;
                 getProfile(email)
@@ -142,6 +143,7 @@ export default function PostView() {
         let curEmail = localStorage.getItem('ddym-email');
         if(post && comment !== "") {
             UploadComment(post, idToken, comment, post.comments);
+            // 내 프로필 정보 받아서 UI 업데이트
             if(curEmail) getProfile(curEmail)
             .then((res) => {
                 if(res !== undefined) {
@@ -156,6 +158,21 @@ export default function PostView() {
             })
             setComment("");
         }
+    }
+
+    const handleDeleteComment = (index:number) => {
+        if(post?.name !== undefined && window.confirm('댓글을 삭제하시겠습니까?')) 
+            DeleteComment(
+                post?.name, 
+                index, 
+                post?.comments, 
+                idToken,
+            ).then((res) => {
+                console.log("댓글 삭제 성공", res);
+                let temp = [...comments];
+                temp.splice(index, 1);
+                setComments(temp);
+            })
     }
 
     const handleClickDelete = () => {
@@ -239,9 +256,21 @@ export default function PostView() {
                                             {item.user}
                                         </p>
                                     </div>
-                                    <p className="nnn text-[0.7rem] ml-3">
+                                    <pre className="nnn text-[0.7rem] ml-10 w-full">
                                         {item.comment}
-                                    </p>
+                                    </pre>
+                                    { item.email === localStorage.getItem('ddym-email') ?
+                                        <div 
+                                            className="mt-[-0.6vh] ml-[5vw]" 
+                                            onClick={()=>handleDeleteComment(index)}
+                                        >
+                                            <Delete 
+                                                sx={{color:'black', width:15, cursor:'pointer'}} 
+                                            />
+                                        </div>
+                                        :
+                                        <></>
+                                    }
                                 </div>    
                             )
                             })}

@@ -21,7 +21,6 @@ export async function UploadComment(post:PostType, idToken:string, comment:strin
             }
         }
     )
-    console.log(temp);
 
     fetch(`https://firestore.googleapis.com/v1/${post.name}?updateMask.fieldPaths=comments`, {
         method: 'PATCH',
