@@ -12,7 +12,7 @@ import { updatePost } from "./updatePost";
 export default function PostBoard( props:{data:PostType[], data2:any, location:string} ) {
     const [target, setTarget] = useState<any>();
     const [curPost, setCurPost] = useRecoilState(curPostStore);
-    const [curPostIndex, setCurPostIndex] = useState<number>(0);
+    const [curPostIndex, setCurPostIndex] = useState<number>(-1);
     const [posts, setPosts] = useState<PostType[]>(props.data);
     const [startIndex, setStartIndex] = useState<number>(30);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -28,7 +28,7 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
     useEffect(() => {
         // 해당 게시물 업데이트
         const postId = curPost?.name.split("/")[6];
-        if(postId !== undefined) {
+        if(postId !== undefined && curPostIndex !== -1) {
             updatePost(postId).then((res)=> {
                 let temp = [...posts];
                 temp.splice(curPostIndex, 1, res[0]);
