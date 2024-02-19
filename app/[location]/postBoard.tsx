@@ -5,51 +5,41 @@ import Naviagator from "./navigator";
 import styled from "styled-components";
 import { fetchPost } from "./fetchPost";
 import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { curPostStore, isPostViewOpenStore, postCreatedStore, PostType, selectedPointStore } from "../recoilContextProvider"
+import { useRecoilState } from "recoil";
+import { curPostStore, isPostViewOpenStore, PostType } from "../recoilContextProvider"
+import { updatePost } from "./updatePost";
 
 export default function PostBoard( props:{data:PostType[], data2:any, location:string} ) {
     const [target, setTarget] = useState<any>();
-    const setCurPost = useSetRecoilState(curPostStore);
+    const [curPost, setCurPost] = useRecoilState(curPostStore);
+    const [curPostIndex, setCurPostIndex] = useState<number>(0);
     const [posts, setPosts] = useState<PostType[]>(props.data);
     const [startIndex, setStartIndex] = useState<number>(30);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [firstRender, setFirstRender] = useState<boolean>(true);
-    const [postCreated, setPostCreated] = useRecoilState(postCreatedStore);
     const [postViewOpen, setPostViewOpen] = useRecoilState(isPostViewOpenStore);
     
     // postView 열기
-    const handleClickPost = (item:PostType) => {
+    const handleClickPost = (item:PostType, index:number) => {
         setCurPost(item);
+        setCurPostIndex(index);
         setPostViewOpen(true);
     }
+
+    useEffect(() => {
+        // 해당 게시물 업데이트
+        const postId = curPost?.name.split("/")[6];
+        if(postId !== undefined) {
+            updatePost(postId).then((res)=> {
+                let temp = [...posts];
+                temp.splice(curPostIndex, 1, res[0]);
+                setPosts(temp);
+            })
+        }     
+    }, [postViewOpen])
 
     // useEffect(() => {
     //     console.log(props.data2);
     // }, [])
-
-    // postView 닫히면 post update
-    useEffect(() => {
-        if(!firstRender || postCreated) {
-            let startUpdateIndex;
-            if(posts[startIndex-1] !== undefined) 
-                startUpdateIndex = +posts[startIndex-1].createTime;        // 모든 게시물 최소 30개씩 만들고, 제대로 업데이트되는지 확인
-            else 
-                startUpdateIndex = +posts[posts.length-30].createTime;
-            const res = fetchPost(props.location, startUpdateIndex);
-            res.then((res) => {
-                let temp:any[] = [];
-                if(posts !== undefined) {
-                    temp = [...posts];
-                    temp.splice(startIndex-30, 30, ...res);
-                    setPosts(temp);
-                    setPostCreated(false);
-                    console.log("post updated", res);
-                }
-            })
-        } else
-        setFirstRender(false);
-    }, [postViewOpen])
 
     useEffect(() => {
         const options = {
@@ -87,10 +77,6 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
         };
     }, [target, startIndex]);
 
-      useEffect(() => {
-        console.log("startIndex : ", startIndex);
-      }, [startIndex])
-
     return (
         <div className="flex flex-col">
             <div className="flex-row w-full">
@@ -101,7 +87,7 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
                         <Wrapper 
                             key={index} 
                             className="center"
-                            onClick={()=>handleClickPost(item)}
+                            onClick={()=>handleClickPost(item, index)}
                         >
                             <p className="absolute text-white nnn opacity-0 z-[100]">{item.title}</p>
                             <div>
@@ -118,7 +104,7 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
                     })}
                 </div>
             </div>
-            { isLoading ? <></> : <div ref={setTarget} className="w-full h-[10vh] bg-red-500" /> }
+            { isLoading ? <></> : <div ref={setTarget} className="w-full h-[10vh]" /> }
             <div className="w-full h-[10vh]" />
         </div>
     )

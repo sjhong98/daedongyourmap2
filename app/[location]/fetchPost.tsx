@@ -1,6 +1,7 @@
 export const fetchPost = async (value: string, lastIndex?: number, ) => {
     let startIndex;
     if(lastIndex === undefined) {
+        // 첫 게시물의 createTime 기준 내림차순 게시물 받기 위해 첫 게시물 데이터 패치
         const getFirstPost = await fetch('https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents:runQuery', {
             method: 'POST',
             cache: 'no-cache',
