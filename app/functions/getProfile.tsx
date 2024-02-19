@@ -6,11 +6,12 @@ export const getProfile = async (email:string) => {
     const data = await profile.json();
     let extract;
     if(data.fields !== undefined) {
+        console.log(data);       
         extract = {
             displayName: data.fields.displayName.stringValue,
             photoURL: data.fields.photoURL.stringValue,
-            follower: data.fields.follewer.arrayValue.values,
-            follow: data.fields.follow.arrayValue.values
+            follower: data.fields.follower.arrayValue,
+            follow: data.fields.follow.arrayValue
         }
     }
     return extract;

@@ -13,12 +13,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { deletePost } from "./functions/deletePost";
 import { removeLike } from "./functions/removeLike";
-import { uploadLike } from "./uploadLike";
+import { uploadLike } from "./functions/uploadLike";
+import { swtichName } from "@/app/functions/switchName";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getProfile } from "@/app/functions/getProfile";
-import { UploadComment } from "./uploadComment";
+import { UploadComment } from "./functions/uploadComment";
 import { curPostStore, idTokenStore, isPostViewOpenStore, postCreatedStore, selectedPointStore, userDataStore } from "../../recoilContextProvider";
-import { swtichName } from "@/app/functions/switchName";
 
 
 export interface userInfo {
