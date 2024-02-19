@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import styled from "styled-components";
-import Map from "../components/map/map";
 import { fetchPost } from "./fetchPost";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -13,7 +12,6 @@ import Naviagator from "./navigator";
 export default function PostBoard( props:{data:PostType[], data2:any, location:string} ) {
     const [target, setTarget] = useState<any>();
     const setCurPost = useSetRecoilState(curPostStore);
-    const selectedPoint = useRecoilValue(selectedPointStore);
     const [posts, setPosts] = useState<PostType[]>(props.data);
     const [startIndex, setStartIndex] = useState<number>(30);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -122,6 +120,7 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
                 </div>
             </div>
             { isLoading ? <></> : <div ref={setTarget} className="w-full h-[10vh] bg-red-500" /> }
+            <div className="w-full h-[10vh]" />
         </div>
     )
 }

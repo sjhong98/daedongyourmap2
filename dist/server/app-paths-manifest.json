@@ -1,7 +1,5 @@
 {
-  "/profile/[email]/page": "app/profile/[email]/page.js",
-  "/page": "app/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/[location]/page": "app/[location]/page.js",
-  "/create/page": "app/create/page.js",
-  "/setting/edit/page": "app/setting/edit/page.js"
+  "/page": "app/page.js"
 }
