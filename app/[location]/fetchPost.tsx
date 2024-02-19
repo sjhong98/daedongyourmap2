@@ -1,5 +1,4 @@
 export const fetchPost = async (value: string, lastIndex?: number, ) => {
-    console.log("lastIndex : ", lastIndex);
     let startIndex;
     if(lastIndex === undefined) {
         const getFirstPost = await fetch('https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents:runQuery', {

@@ -1,13 +1,12 @@
 'use client';
 
 import Image from "next/image";
+import Naviagator from "./navigator";
 import styled from "styled-components";
 import { fetchPost } from "./fetchPost";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { curPostStore, isPostViewOpenStore, postCreatedStore, PostType, selectedPointStore } from "../recoilContextProvider";
-import Naviagator from "./navigator";
-
+import { curPostStore, isPostViewOpenStore, postCreatedStore, PostType, selectedPointStore } from "../recoilContextProvider"
 
 export default function PostBoard( props:{data:PostType[], data2:any, location:string} ) {
     const [target, setTarget] = useState<any>();
