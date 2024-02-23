@@ -1,11 +1,9 @@
-export const fetchPost = async (value: string, lastIndex?: number, ) => {
+export const fetchPost = async (location: string, email:string, lastIndex?: number) => {
     let startIndex;
+    let body: any;
     if(lastIndex === undefined) {
-        // 첫 게시물의 createTime 기준 내림차순 게시물 받기 위해 첫 게시물 데이터 패치
-        const getFirstPost = await fetch('https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents:runQuery', {
-            method: 'POST',
-            cache: 'no-cache',
-            body: JSON.stringify({
+        if(location !== "all" && email === "all") {
+            body = JSON.stringify({
                 "structuredQuery": {
                     "from": [{
                         "collectionId": "posts",
@@ -14,7 +12,7 @@ export const fetchPost = async (value: string, lastIndex?: number, ) => {
                         "fieldFilter": {
                             "field": { "fieldPath": "point" },
                             "op": "EQUAL",
-                            "value": { "stringValue": `${value}` }
+                            "value": { "stringValue": `${location}` }
                         }
                     },
                     "orderBy": [{
@@ -24,6 +22,52 @@ export const fetchPost = async (value: string, lastIndex?: number, ) => {
                     "limit": 1,
                 }
             })
+        } else if(location === "all" && email !== "all") {
+            body = JSON.stringify({
+                "structuredQuery": {
+                    "from": [{
+                        "collectionId": "posts",
+                    }],
+                    "where": {
+                        "fieldFilter": {
+                            "field": { "fieldPath": "user" },
+                            "op": "EQUAL",
+                            "value": { "stringValue": `${email}` }
+                        }
+                    },
+                    "orderBy": [{
+                            "field": { "fieldPath": "createTime" },
+                            "direction": "DESCENDING" 
+                    }],
+                    "limit": 1,
+                }
+            })
+        } else {
+            body = JSON.stringify({
+                "structuredQuery": {
+                    "from": [{
+                        "collectionId": "posts",
+                    }],
+                    "where": {
+                        "fieldFilter": {
+                            "field": { "fieldPath": "user" },
+                            "op": "EQUAL",
+                            "value": { "stringValue": `${email}` }
+                        }
+                    },
+                    "orderBy": [{
+                            "field": { "fieldPath": "createTime" },
+                            "direction": "DESCENDING" 
+                    }],
+                    "limit": 1,
+                }
+            })
+        }
+        // 첫 게시물의 createTime 기준 내림차순 게시물 받기 위해 첫 게시물 데이터 패치
+        const getFirstPost = await fetch('https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents:runQuery', {
+            method: 'POST',
+            cache: 'no-cache',
+            body: body
         });
         const firstPost = await getFirstPost.json();
         if(firstPost && firstPost) startIndex = firstPost[0].document.fields.createTime.doubleValue;
@@ -32,10 +76,9 @@ export const fetchPost = async (value: string, lastIndex?: number, ) => {
         startIndex = lastIndex;
     } 
 
-    const response = await fetch('https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents:runQuery', {
-        method: 'POST',
-        cache: 'no-cache',
-        body: JSON.stringify({
+    let requestBody: any;
+    if(location !== "all" && email === "all") {
+        requestBody = JSON.stringify({
             "structuredQuery": {
                 "from": [{
                     "collectionId": "posts",
@@ -44,7 +87,7 @@ export const fetchPost = async (value: string, lastIndex?: number, ) => {
                     "fieldFilter": {
                         "field": { "fieldPath": "point" },
                         "op": "EQUAL",
-                        "value": { "stringValue": `${value}` }
+                        "value": { "stringValue": `${location}` }
                     }
                 },
                 "orderBy": [{
@@ -58,6 +101,60 @@ export const fetchPost = async (value: string, lastIndex?: number, ) => {
                 "limit": 30
             }
         })
+    } else if(location === "all" && email !== "all") {
+        requestBody = JSON.stringify({
+            "structuredQuery": {
+                "from": [{
+                    "collectionId": "posts",
+                }],
+                "where": {
+                    "fieldFilter": {
+                        "field": { "fieldPath": "user" },
+                        "op": "EQUAL",
+                        "value": { "stringValue": `${email}` }
+                    }
+                },
+                "orderBy": [{
+                        "field": { "fieldPath": "createTime" },
+                        "direction": "DESCENDING" 
+                }],
+                "startAt": {
+                    "values": { "doubleValue": startIndex },
+                    "before": true,
+                },
+                "limit": 30
+            }
+        })
+    } else {
+        requestBody = JSON.stringify({
+            "structuredQuery": {
+                "from": [{
+                    "collectionId": "posts",
+                }],
+                "where": {
+                    "fieldFilter": {
+                        "field": { "fieldPath": "point" },
+                        "op": "EQUAL",
+                        "value": { "stringValue": `${location}` }
+                    }
+                },
+                "orderBy": [{
+                        "field": { "fieldPath": "createTime" },
+                        "direction": "DESCENDING" 
+                }],
+                "startAt": {
+                    "values": { "doubleValue": startIndex },
+                    "before": true,
+                },
+                "limit": 30
+            }
+        })
+    }
+
+    const response = await fetch('https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents:runQuery', {
+        method: 'POST',
+        cache: 'no-cache',
+        body: requestBody
     });
 
     const data = await response.json();

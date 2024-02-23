@@ -1,13 +1,15 @@
 import PostBoard from '@/app/[location]/postBoard';
 import ProfileInfo from './profileInfo';
+import { fetchPost } from '@/app/[location]/fetchPost';
 
 type Props = {
     params: { email: string };
     searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export default function Profile(props: Props) {
+export default async function Profile(props: Props) {
     let email = props.params.email.replace('%40', '@');
+    let data = await fetchPost("all", email);
 
     return (
         <div className="flex w-screen h-full">
@@ -18,7 +20,7 @@ export default function Profile(props: Props) {
                 />
             </div>
             <div className="w-2/3 h-full center">
-                posts
+                <PostBoard data={data} data2={data} email={email} />
             </div>
         </div>
     )

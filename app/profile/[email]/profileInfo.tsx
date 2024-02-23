@@ -56,10 +56,6 @@ export default function ProfileInfo(props:Props) {
         })
     }, [])
 
-    useEffect(() => {
-        console.log("posts : ", posts);
-    }, [posts])
-
     // 팔로우 중이라면 표시
     useEffect(() => {
         if(follow.find((item) => item.stringValue === myEmail))
@@ -155,7 +151,7 @@ export default function ProfileInfo(props:Props) {
                 :
                 <></>
             }
-            <div className="w-full h-full center">
+            <div className="center fixed ml-[-10vw]">
                 { isMyProfile ? 
                     <ProfilePic /> 
                         : 
@@ -183,7 +179,7 @@ export default function ProfileInfo(props:Props) {
                         </p>
                         { isMyProfile ?
                             <Setting 
-                                className="cursor-pointer ml-2" 
+                                className="cursor-pointer ml-2 z-[1000]" 
                                 onClick={handleClickSetting} 
                             />
                             :

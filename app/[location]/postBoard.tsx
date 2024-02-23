@@ -9,7 +9,14 @@ import { useRecoilState } from "recoil";
 import { curPostStore, isPostViewOpenStore, PostType } from "../recoilContextProvider"
 import { updatePost } from "./updatePost";
 
-export default function PostBoard( props:{data:PostType[], data2:any, location:string} ) {
+interface Props {
+    data: PostType[], 
+    data2: any, 
+    location?: string
+    email?: string,
+}
+
+export default function PostBoard( props: Props ) {
     const [target, setTarget] = useState<any>();
     const [curPost, setCurPost] = useRecoilState(curPostStore);
     const [curPostIndex, setCurPostIndex] = useState<number>(-1);
@@ -17,6 +24,12 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
     const [startIndex, setStartIndex] = useState<number>(30);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [postViewOpen, setPostViewOpen] = useRecoilState(isPostViewOpenStore);
+    let location: string;
+    if(props.location) location = props.location;
+    else location = "all";
+    let email: string;
+    if(props.email) email = props.email;
+    else email = "all";
     
     // postView 열기
     const handleClickPost = (item:PostType, index:number) => {
@@ -46,7 +59,7 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
         const handleFetchData = ([entry]:any) => {
             // posts[startIndex-1] !== undefined일 경우 -> 더 이상 게시물이 없는 경우
             if(entry.isIntersecting && posts[startIndex-1] !== undefined) {
-                const res = fetchPost(props.location, +posts[startIndex-1].createTime);
+                const res = fetchPost(location, email, +posts[startIndex-1].createTime);
                 res.then((res) => {
                     let temp:any[] = [];
                     if(posts !== undefined) {
