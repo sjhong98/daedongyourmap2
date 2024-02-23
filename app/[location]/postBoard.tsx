@@ -37,10 +37,6 @@ export default function PostBoard( props:{data:PostType[], data2:any, location:s
         }     
     }, [postViewOpen])
 
-    // useEffect(() => {
-    //     console.log(props.data2);
-    // }, [])
-
     useEffect(() => {
         const options = {
           root: null,

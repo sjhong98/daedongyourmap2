@@ -1,4 +1,4 @@
-export const fetchUserPost = async (value?: string) => {
+export const fetchUserPost = async (email?: string) => {
     const response = await fetch('https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents:runQuery', {
     method: 'POST',
     cache: 'no-cache',
@@ -11,7 +11,7 @@ export const fetchUserPost = async (value?: string) => {
                 "fieldFilter": {
                     "field": { "fieldPath": "user" },
                     "op": "EQUAL",
-                    "value": { "stringValue": `${value}` }
+                    "value": { "stringValue": `${email}` }
                 }
             },
             "orderBy": [
