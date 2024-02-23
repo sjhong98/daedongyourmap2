@@ -49,10 +49,24 @@ export const fetchPost = async (location: string, email:string, lastIndex?: numb
                         "collectionId": "posts",
                     }],
                     "where": {
-                        "fieldFilter": {
-                            "field": { "fieldPath": "user" },
-                            "op": "EQUAL",
-                            "value": { "stringValue": `${email}` }
+                        "compositeFilter": {
+                            "op": "AND",
+                            "filters": [
+                                {
+                                    "fieldFilter": {
+                                        "field": { "fieldPath": "user" },
+                                        "op": "EQUAL",
+                                        "value": { "stringValue": `${email}` }
+                                    }
+                                },
+                                {
+                                    "fieldFilter": {
+                                        "field": { "fieldPath": "point" },
+                                        "op": "EQUAL",
+                                        "value": { "stringValue": `${location}` }
+                                    }
+                                }
+                            ]
                         }
                     },
                     "orderBy": [{
@@ -70,6 +84,8 @@ export const fetchPost = async (location: string, email:string, lastIndex?: numb
             body: body
         });
         const firstPost = await getFirstPost.json();
+        console.log(firstPost);
+        
         if(firstPost && firstPost) startIndex = firstPost[0].document.fields.createTime.doubleValue;
         else startIndex = 0;
     } else {
@@ -132,21 +148,31 @@ export const fetchPost = async (location: string, email:string, lastIndex?: numb
                     "collectionId": "posts",
                 }],
                 "where": {
-                    "fieldFilter": {
-                        "field": { "fieldPath": "point" },
-                        "op": "EQUAL",
-                        "value": { "stringValue": `${location}` }
+                    "compositeFilter": {
+                        "op": "AND",
+                        "filters": [
+                            {
+                                "fieldFilter": {
+                                    "field": { "fieldPath": "user" },
+                                    "op": "EQUAL",
+                                    "value": { "stringValue": `${email}` }
+                                }
+                            },
+                            {
+                                "fieldFilter": {
+                                    "field": { "fieldPath": "point" },
+                                    "op": "EQUAL",
+                                    "value": { "stringValue": `${location}` }
+                                }
+                            }
+                        ]
                     }
                 },
                 "orderBy": [{
                         "field": { "fieldPath": "createTime" },
                         "direction": "DESCENDING" 
                 }],
-                "startAt": {
-                    "values": { "doubleValue": startIndex },
-                    "before": true,
-                },
-                "limit": 30
+                "limit": 1,
             }
         })
     }

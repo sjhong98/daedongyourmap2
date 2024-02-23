@@ -19,7 +19,10 @@ export default async function Board(props: Props) {
             <div className="fixed mt-[-13vh]">
                 <p className="text-white text-[2rem] mb-6 nnb">{ displayName }</p>
             </div>
-            <PostBoard data={data} data2={data} location={location} />
+            <PostBoard 
+                data={data} 
+                location={location} 
+            />
             <PostView /> 
         </div>
     )

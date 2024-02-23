@@ -7,12 +7,16 @@ import { useRecoilValue } from "recoil";
 import { useEffect, useState } from "react";
 import { swtichName } from "../functions/switchName";
 import { selectedPointStore } from "../recoilContextProvider";
+import { usePathname } from "next/navigation";
 
 export default function Naviagator() {
+    const pathname = usePathname();
     const selectedPoint = useRecoilValue(selectedPointStore);
     const [displayPoint, setDisplayPoint] = useState("");
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [openAnim, setOpenAnim] = useState("");
+
+    const containerStyle = "fixed flex ml-[-60vw] w-[40vw] z-[999]";
 
     useEffect(() => {
         // 영어 지역명 -> 한글 지역명
@@ -23,20 +27,22 @@ export default function Naviagator() {
 
     const handleClickOpen = () => {
         if(!isOpen) {
-            setOpenAnim("navigator-open");
+            setOpenAnim("navigator-open z-[999]");
             setIsOpen(true);
         }
         else {
-            setOpenAnim("navigator-close");
+            setOpenAnim("navigator-close z-[0]");
             setIsOpen(false);
         }
     }
 
     return (
-        <div className="fixed flex ml-[-60vw] w-[40vw]">
-            <div className={`flex flex-col scale-[1.2] opacity-0 ${openAnim}`}>
-                <Map />
-                <p className="text-white">{displayPoint}</p>
+        <div className={pathname === "/" ? containerStyle : `${containerStyle} mt-[15vh]`}>
+            <div className={`flex flex-col scale-[0.9] opacity-0 ${openAnim}`}>
+                <Map isProfile={true} />
+                <p className="text-white">
+                    {displayPoint}
+                </p>
             </div>
             <div className="flex-1" />
             <div className="mt-52 cursor-pointer z-[1000]" onClick={handleClickOpen} >

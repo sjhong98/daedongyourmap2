@@ -11,7 +11,7 @@ import { updatePost } from "./updatePost";
 
 interface Props {
     data: PostType[], 
-    data2: any, 
+    data2?: any, 
     location?: string
     email?: string,
 }

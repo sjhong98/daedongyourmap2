@@ -19,12 +19,13 @@ import jn from '@/public/map/jn.png';
 import jb from '@/public/map/jb.png'; 
 import bg from '@/public/map/bg.png';
 import { useSetRecoilState } from 'recoil';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Image, { StaticImageData } from 'next/image';
 import { selectedPointStore } from '@/app/recoilContextProvider';
 
 // ssr로 히트맵 정보 받기
-export default function Map() {
+export default function Map(props:{isProfile?:boolean}) {
+    let ip = props.isProfile;
     return (
         <div className='flex justify-center items-center w-[300px] h-[200px]'>
             <Image src={bg} alt='bg' className=' absolute mt-[450px] ml-[300px] rotate-[-2deg] z-[1] scale-[4.5]' />
@@ -58,11 +59,13 @@ interface MapImagePropsType {
 
 function MapImage(props:MapImagePropsType) {
     const router = useRouter();
+    const pathName = usePathname();
     const { src, alt, width, position } = props;
     const set = useSetRecoilState(selectedPointStore);
 
     const handleClick = (e:any) => {
-        router.push(`/${e.target.alt}`);
+        if(pathName === "/") router.push(`/${e.target.alt}`);
+        else router.push(`${pathName}/${e.target.alt}`);
     }
 
     const handleMouseOver = (e:any) => {
@@ -74,12 +77,12 @@ function MapImage(props:MapImagePropsType) {
     }
 
     return <Image 
-            src={src} 
-            alt={alt} 
-            width={width} 
-            className={position} 
-            onClick={handleClick}
-            onMouseOver={handleMouseOver}
-            onMouseOut={handleMouseOut}
+                src={src} 
+                alt={alt} 
+                width={width} 
+                className={position} 
+                onClick={handleClick}
+                onMouseOver={handleMouseOver}
+                onMouseOut={handleMouseOut}
             />
 }

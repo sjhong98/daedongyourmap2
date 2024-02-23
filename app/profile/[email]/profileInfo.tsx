@@ -6,22 +6,20 @@ import ProfilePic from "../profilePic/profilePic";
 import tempProPic from '@/public/defaultProfilePic.jpeg';
 import { UpdateFollower } from './updateFollower';
 import { useRecoilValue } from 'recoil';
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchUserPost } from '../fetchUserPost';
 import { getProfile } from '../../functions/getProfile';
 import { idTokenStore } from '@/app/recoilContextProvider';
 
-interface Props {
-    email: string
-}
-
-export default function ProfileInfo(props:Props) {
+export default function ProfileInfo() {
     const router = useRouter();
     const idToken = useRecoilValue(idTokenStore);
-    let email = props.email;
+    let pathname = usePathname();
+    let email = pathname.split('/')[2];
     let myEmail:string | null; 
-    if(typeof window !== undefined) myEmail = localStorage.getItem('ddym-email');
+    if(typeof window !== undefined && localStorage !== undefined) 
+        myEmail = localStorage.getItem('ddym-email');
     const textStyle = "text-white text-[1rem]";
     const [isMyProfile, setIsMyProfile] = useState<boolean>(false);
     const [displayName, setDisplayName] = useState<string>("test");
@@ -151,7 +149,7 @@ export default function ProfileInfo(props:Props) {
                 :
                 <></>
             }
-            <div className="center fixed ml-[-10vw]">
+            <div className="center fixed ml-[-10vw] z-[1000]">
                 { isMyProfile ? 
                     <ProfilePic /> 
                         : 
@@ -179,7 +177,7 @@ export default function ProfileInfo(props:Props) {
                         </p>
                         { isMyProfile ?
                             <Setting 
-                                className="cursor-pointer ml-2 z-[1000]" 
+                                className="cursor-pointer ml-2" 
                                 onClick={handleClickSetting} 
                             />
                             :
