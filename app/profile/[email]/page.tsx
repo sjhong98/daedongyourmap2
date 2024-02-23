@@ -1,13 +1,16 @@
 'use client';
 
 import Image from 'next/image';
-import SI from '@mui/icons-material/Settings';
+import Setting from '@mui/icons-material/Settings';
 import ProfilePic from "../profilePic/profilePic";
 import tempProPic from '@/public/defaultProfilePic.jpeg';
+import { UpdateFollower } from './updateFollower';
+import { useRecoilValue } from 'recoil';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchUserPost } from '../fetchUserPost';
 import { getProfile } from '../../functions/getProfile';
+import { idTokenStore } from '@/app/recoilContextProvider';
 
 type Props = {
     params: { email: string };
@@ -16,17 +19,18 @@ type Props = {
 
 export default function Profile(props: Props) {
     const router = useRouter();
+    const idToken = useRecoilValue(idTokenStore);
     let email = props.params.email.replace('%40', '@');
+    let myEmail:string | null; 
+    if(typeof window !== undefined) myEmail = localStorage.getItem('ddym-email');
     const textStyle = "text-white text-[1rem]";
-    let myEmail:string;
-    if(typeof window !== 'undefined' && localStorage !== null)
-        localStorage.getItem('ddym-email');
     const [isMyProfile, setIsMyProfile] = useState<boolean>(false);
     const [displayName, setDisplayName] = useState<string>("test");
-    const [follow, setFollow] = useState<Array<string>>([]);
-    const [follower, setFollower] = useState<Array<string>>([]);
+    const [follow, setFollow] = useState<Array<{stringValue:string}>>([]);
+    const [follower, setFollower] = useState<Array<{stringValue:string}>>([]);
+    const [isFollowing, setIsFollowing] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [isFollow, setIsFollow] = useState<boolean>(true);
+    const [isFollowModal, setIsFollowModal] = useState<boolean>(true);
     const [photoURL, setPhotoURL] = useState<string>("");
     const [posts, setPosts] = useState<any>([]);
     const listStyle = "text-white nnn mt-4 cursor-pointer";
@@ -34,17 +38,13 @@ export default function Profile(props: Props) {
     useEffect(() => {
         getProfile(email)
         .then((res) => {
-                                                                // if(res.follow !== undefined) 
-                                                                setFollow(['sjhong98@Icloud.com', 'elyont98@naver.com', 'test@test.com']); // ****** delete
-                                                                // if(res.follower !== undefined) 
-                                                                setFollower(['sjhong98@Icloud.com', 'elyont98@naver.com', 'test@test.com']);
             if(res !== undefined) {
                 if(res.displayName !== "" && res.displayName !== undefined) setDisplayName(res.displayName);
                 else setDisplayName(email);
-                // if(res.follow !== undefined) 
-                    setFollow(['sjhong98@Icloud.com', 'elyont98@naver.com', 'test@test.com']); // ****** need modify
-                // if(res.follower !== undefined) 
-                    setFollower(['sjhong98@Icloud.com', 'elyont98@naver.com', 'test@test.com']);
+                if(res.follow !== undefined) setFollow(res.follow);
+                else setFollow([]);
+                if(res.follower !== undefined) setFollower(res.follower);
+                else setFollower([]);
                 if(res.photoURL !== "" && res.photoURL !== undefined) setPhotoURL(res.photoURL);
                 if(email === myEmail) setIsMyProfile(true);
                 else setIsMyProfile(false);
@@ -62,14 +62,14 @@ export default function Profile(props: Props) {
         router.push('/setting/edit');
     }
 
-    const handleClickFollow = () => {
+    const handleClickFollowList = () => {
         setIsModalOpen(true);
-        setIsFollow(true);
+        setIsFollowModal(true);
     }
 
-    const handleClickFollower = () => {
+    const handleClickFollowerList = () => {
         setIsModalOpen(true);
-        setIsFollow(true);
+        setIsFollowModal(false);
     }
 
     const handleClickProfile = (email:string) => {
@@ -82,22 +82,65 @@ export default function Profile(props: Props) {
         }
     }
 
+    const handleFollow = () => {
+        setIsFollowing(true);
+        let updateList = [...follower];
+        if(myEmail) updateList.push( { stringValue: myEmail } );
+        setFollower(updateList);
+        UpdateFollower(idToken, email, updateList)
+        .then((res:any) => {
+            console.log("팔로우 성공", res);
+        })
+    }
+
+    const handleUnfollow = () => {
+        setIsFollowing(false);
+        let updateList = [...follower];
+        let findIndex = updateList.findIndex((item) => item.stringValue === myEmail);
+        updateList.splice(findIndex, 1);
+        setFollower(updateList);
+        UpdateFollower(idToken, email, updateList)
+        .then((res:any) => {
+            console.log("언팔로우 성공", res);
+        })
+    }
+
     return (
         <div className="flex w-screen h-full">
             <title>대동, 당신의 지도 | 프로필</title>
+            
+            {/* 팔로우, 팔로워 모달창 */}
             { isModalOpen ? 
-                <div id="outside-view" onClick={handleClickExit} className='fixed w-screen h-[100vh] z-[100] center mt-[-20vh] backdrop-blur-sm'>
+                <div 
+                    id="outside-view" 
+                    onClick={handleClickExit} 
+                    className='fixed w-screen h-[100vh] z-[100] center mt-[-20vh] backdrop-blur-sm'
+                >
                     <div className='bg-stone-800 w-[25vw] h-[35vh] rounded-2xl shadow-2xl'>
                         <div className='border-b-[1px] border-stone-600 w-full h-[4vh] center'>
-                            <p className='text-white nnn'>{isFollow ? "팔로우" : "팔로워"}</p>
+                            <p className='text-white nnn'>
+                                {isFollowModal ? "팔로우" : "팔로워"}
+                            </p>
                         </div>
                         <div className='p-6'>
-                        { isFollow ?
-                            follow.map((item:string, index:number) => {
-                                return <p key={index} onClick={()=>handleClickProfile(item)} className={listStyle}>{item}</p>
+                        { isFollowModal ?
+                            follow.map((item:any, index:number) => {
+                                return <p 
+                                            key={index}
+                                            onClick={()=>handleClickProfile(item.stringValue)} 
+                                            className={listStyle}
+                                        >
+                                        {item.stringValue}
+                                        </p>
                             }) :
-                            follower.map((item:string, index:number) => {
-                                return <p key={index} onClick={()=>handleClickProfile(item)} className={listStyle}>{item}</p>
+                            follower.map((item:any, index:number) => {
+                                return <p 
+                                            key={index} 
+                                            onClick={()=>handleClickProfile(item.stringValue)} 
+                                            className={listStyle}
+                                        >
+                                        {item.stringValue}
+                                        </p>
                             })
                         }
                         </div>
@@ -107,17 +150,58 @@ export default function Profile(props: Props) {
                 <></>
             }
             <div className="w-1/3 h-full center">
-                { isMyProfile ? <ProfilePic /> : photoURL === "" ? <Image src={tempProPic} width={200} height={200} alt="..." className='rounded-full' /> : <Image src={photoURL} width={200} height={200} alt="..." className='rounded-full' /> }
+                { isMyProfile ? 
+                    <ProfilePic /> 
+                        : 
+                        photoURL === "" ? 
+                            <Image 
+                                src={tempProPic} 
+                                width={200} 
+                                height={200} 
+                                alt="..." 
+                                className='rounded-full aspect-square object-cover' 
+                            /> 
+                            : 
+                            <Image 
+                                src={photoURL} 
+                                width={200} 
+                                height={200} 
+                                alt="..." 
+                                className='rounded-full aspect-square object-cover' 
+                            /> 
+                }
                 <div className="flex flex-col ml-4">
                     <div className="flex items-center"> 
-                        <p className="text-white nnn text-[1.5rem]">{displayName}</p>
-                        <SI className="cursor-pointer ml-2" onClick={handleClickSetting} />
+                        <p className="text-white nnn text-[1.5rem]">
+                            {displayName}
+                        </p>
+                        { isMyProfile ?
+                            <Setting 
+                                className="cursor-pointer ml-2" 
+                                onClick={handleClickSetting} 
+                            />
+                            :
+                            isFollowing ?
+                                <button
+                                    onClick={handleUnfollow}
+                                    className='border-[1px] border-gray-400 rounded-md ml-3 h-[2vh] center p-1'
+                                >
+                                    <p className='text-gray-400 text-[0.6rem] nnl'>팔로우 중</p>
+                                </button>
+                                :
+                                <button 
+                                    onClick={handleFollow}
+                                    className='bg-white rounded-md ml-3 nnl text-black text-sm h-[2vh] center p-1'
+                                >
+                                    팔로우
+                                </button>
+                        }
                     </div>
                     <div className="flex">
                         <p className={`${textStyle} nnn`}>팔로우</p>
-                        <p className={`${textStyle} nnb ml-1 cursor-pointer`} onClick={handleClickFollow}>100</p>
+                        <p className={`${textStyle} nnb ml-1 cursor-pointer`} onClick={handleClickFollowList}>100</p>
                         <p className={`${textStyle} nnn ml-3`}>팔로워</p>
-                        <p className={`${textStyle} nnb ml-1 cursor-pointer`}onClick={handleClickFollower}>100</p>
+                        <p className={`${textStyle} nnb ml-1 cursor-pointer`}onClick={handleClickFollowerList}>100</p>
                     </div>  
                 </div>
             </div>

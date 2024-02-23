@@ -9,8 +9,8 @@ export const getProfile = async (email:string) => {
         extract = {
             displayName: data.fields.displayName.stringValue,
             photoURL: data.fields.photoURL.stringValue,
-            follower: data.fields.follower.arrayValue,
-            follow: data.fields.follow.arrayValue
+            follower: data.fields.follower.arrayValue.values,
+            follow: data.fields.follow.arrayValue.values
         }
     }
     return extract;
