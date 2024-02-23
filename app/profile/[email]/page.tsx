@@ -50,13 +50,18 @@ export default function Profile(props: Props) {
                 else setIsMyProfile(false);
             }
         })
-
         // 한번에 전체 게시물 가져오기
         fetchUserPost(email)
         .then((res) => {
             setPosts(res);
         })
     }, [])
+
+    // 팔로우 중이라면 표시
+    useEffect(() => {
+        if(follow.find((item) => item.stringValue === myEmail))
+            setIsFollowing(true);
+    }, [follower])
 
     const handleClickSetting = () => {
         router.push('/setting/edit');
