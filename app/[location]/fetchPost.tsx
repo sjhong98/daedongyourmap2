@@ -1,5 +1,5 @@
 export const fetchPost = async (location: string, email:string, lastIndex?: number) => {
-    console.log("\n\n\n\n\n\nlocation, email : ", location, email, "\n\n\n\n\n\n\n");
+    // console.log("\n\n\n\n\n\nlocation, email : ", location, email, "\n\n\n\n\n\n\n");
     let startIndex;
     let body: any;
     if(lastIndex === undefined) {

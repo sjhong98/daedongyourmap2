@@ -43,6 +43,7 @@ export default function PostView() {
     const [style, setStyle] = useState<string>("invisible");
     const [displayName, setDisplayName] = useState<string>("");
     const [displayPoint, setDisplayPoint] = useState<string>("");
+    const [photoURL, setPhotoURL] = useState<string>("");
     const [isOpen, setIsOpen] = useRecoilState(isPostViewOpenStore);
     const [isModify, setIsModify] = useState<boolean>(false);
     const btnStyle = {color:'black', width:20, cursor:'pointer'};
@@ -60,8 +61,9 @@ export default function PostView() {
                 .then((res) => {
                     if(res !== undefined && res.displayName !== "") setDisplayName(res.displayName);
                     else setDisplayName(post.user);
+                    if(res !== undefined && res.photoURL !== "") setPhotoURL(res.photoURL);
+                    else setPhotoURL("");
                 })
-                let temp:any[] = [];
             }
             
             if(post.name !== undefined) {
@@ -69,7 +71,7 @@ export default function PostView() {
                 setPostId(splitted[6]);
             }
 
-            // comments의 사용자 정보 가져오고 UI 상태 업데이트
+            // comments 작성자 정보 가져오고 UI 상태 업데이트
             post.comments.map((item:any) => {
                 let email = item.mapValue.fields.user.stringValue;
                 getProfile(email)
@@ -208,21 +210,34 @@ export default function PostView() {
                 <div className="w-1/3 h-full flex flex-col">
                     {/* 요소를 바닥에 고정시키기 위해서는 중간 요소에 flex-1을 주면 됨 */}
                     <div className="p-6 flex-1">
+
                         {/* 작성자 정보 */}
                         <div className="">
                             <div className="flex nnl">
-                                { userData?.photoURL === undefined ? 
+                                { userData?.photoURL === "" ? 
                                     <Image 
                                         src={profile} 
                                         alt="profile" 
                                         className="rounded-full w-[1.5vw] h-[1.5vw] mr-3 mt-1 aspect-square object-cover" 
                                     /> 
                                     : 
-                                    <></>
+                                    <Image 
+                                        src={photoURL} 
+                                        alt="profile" 
+                                        width={50}
+                                        height={50}
+                                        className="rounded-full w-[1.5vw] h-[1.5vw] mr-3 mt-1 aspect-square object-cover" 
+                                    /> 
                                 }
                                 <div className="flex flex-col">
-                                    { userData?.displayName === undefined ? <p>{displayName}</p> : <>{userData.displayName}</>}
-                                    <p className="text-[0.7rem] text-gray-500">{displayPoint}</p>
+                                    { userData?.displayName === undefined ? 
+                                        <p>{displayName}</p> 
+                                        : 
+                                        <p>{userData.displayName}</p>
+                                    }
+                                    <p className="text-[0.7rem] text-gray-500">
+                                        {displayPoint}
+                                    </p>
                                 </div>
                             </div>
                             <div className="mt-2 ml-10">
