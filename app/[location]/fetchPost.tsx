@@ -1,4 +1,5 @@
 export const fetchPost = async (location: string, email:string, lastIndex?: number) => {
+    console.log("\n\n\n\n\n\nlocation, email : ", location, email, "\n\n\n\n\n\n\n");
     let startIndex;
     let body: any;
     if(lastIndex === undefined) {
@@ -86,7 +87,7 @@ export const fetchPost = async (location: string, email:string, lastIndex?: numb
         const firstPost = await getFirstPost.json();
         console.log(firstPost);
         
-        if(firstPost && firstPost) startIndex = firstPost[0].document.fields.createTime.doubleValue;
+        if(firstPost && firstPost[0].document !== undefined) startIndex = firstPost[0].document.fields.createTime.doubleValue;
         else startIndex = 0;
     } else {
         startIndex = lastIndex;
@@ -172,7 +173,11 @@ export const fetchPost = async (location: string, email:string, lastIndex?: numb
                         "field": { "fieldPath": "createTime" },
                         "direction": "DESCENDING" 
                 }],
-                "limit": 1,
+                "startAt": {
+                    "values": { "doubleValue": startIndex },
+                    "before": true,
+                },
+                "limit": 30,
             }
         })
     }

@@ -11,7 +11,7 @@ export default async function Profile(props: Props) {
     let email = props.params.email.replace('%40', '@');
     let location = props.params.location;
     let switchedName = swtichName(location);
-    let data = await fetchPost("all", email);
+    let data = await fetchPost(location, email);
 
     return (
         <div className="w-fill h-full center flex-col">

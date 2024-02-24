@@ -30,6 +30,10 @@ export default function PostBoard( props: Props ) {
     let email: string;
     if(props.email) email = props.email;
     else email = "all";
+
+    useEffect(() => {
+        console.log("location, email : ", location, email);
+    }, [])
     
     // postView 열기
     const handleClickPost = (item:PostType, index:number) => {
