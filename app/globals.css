@@ -55,7 +55,6 @@ body {
 
 .map-elem {
   transition: 0.3s ease;
-  filter: invert(0%);
   cursor: pointer;
 }
 

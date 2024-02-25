@@ -1,13 +1,16 @@
 'use client';
 
-import Map from "./map";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { swtichName } from "@/app/functions/switchName";
 import { selectedPointStore } from "@/app/recoilContextProvider";
 
-export default function MapLayout() {
+type Props = {
+    children: ReactNode
+}
+
+export default function MapLayout( {children}:Props ) {
     let pivotX:number, pivotY:number;
     const [cursorX, setCursorX] = useState(0);
     const [cursorY, setCursorY] = useState(0);
@@ -38,8 +41,13 @@ export default function MapLayout() {
             <div className="mr-[10vw] ml-[-10vw] mt-[20vh] w-[10vw]">
                 <pre className="nnn text-[3rem] text-white">{displayName}</pre>
             </div>
-            <MovingMap x={cursorX*0.1} y={cursorY*0.2} onMouseOver={handleOver} className=' scale-[1.4]'>
-                <Map /> 
+            <MovingMap 
+                x={cursorX*0.1} 
+                y={cursorY*0.2} 
+                onMouseOver={handleOver} 
+                className=' scale-[1.4]'
+            >
+                {children}
             </MovingMap>
         </div>
     )
