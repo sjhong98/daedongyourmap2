@@ -1,8 +1,1 @@
-{
-  "/[location]/page": "app/[location]/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/create/page": "app/create/page.js",
-  "/signin/page": "app/signin/page.js",
-  "/profile/[email]/page": "app/profile/[email]/page.js",
-  "/profile/[email]/[location]/page": "app/profile/[email]/[location]/page.js"
-}
+{}
