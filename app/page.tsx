@@ -1,8 +1,6 @@
-import { GetCount } from './components/map/getCount';
+import { CountType, GetCount } from './components/map/getCount';
 import Map from './components/map/map'
 import MapLayout from './components/map/mapLayout'
-
-type CountType = {point: string, count: number}
 
 export default async function Home() {
     let counts: CountType[] = [];

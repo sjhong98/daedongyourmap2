@@ -24,8 +24,8 @@ import Image from 'next/image';
 type CountType = {point: string, count: number}
 
 export default function Map(props: {counts:CountType[]}) {
-    // let counts = props.counts;
-    let counts = [{point: "incheon", count: 0}, {point: "gyeonggi", count: 0}, {point: "seoul", count: 0}, {point: "gangwon", count: 0}, {point: "chungnam", count: 0}, {point: "daejeon", count: 0}, {point: "chungbuk", count: 0}, {point: "kyungbuk", count: 0}, {point: "daegu", count: 0}, {point: "jeonbuk", count: 0}, {point: "jeonnam", count: 0}, {point: "gwangju", count: 0}, {point: "kyungnam", count: 0}, {point: "ulsan", count: 0}, {point: "busan", count: 0}, {point: "jeju", count: 0}];
+    let counts = props.counts;
+    // let counts = [{point: "incheon", count: 0}, {point: "gyeonggi", count: 0}, {point: "seoul", count: 0}, {point: "gangwon", count: 0}, {point: "chungnam", count: 0}, {point: "daejeon", count: 0}, {point: "chungbuk", count: 0}, {point: "kyungbuk", count: 0}, {point: "daegu", count: 0}, {point: "jeonbuk", count: 0}, {point: "jeonnam", count: 0}, {point: "gwangju", count: 0}, {point: "kyungnam", count: 0}, {point: "ulsan", count: 0}, {point: "busan", count: 0}, {point: "jeju", count: 0}];
 
     return (
         <div className='flex justify-center items-center w-[300px] h-[200px]'>

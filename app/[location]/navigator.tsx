@@ -5,11 +5,12 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { useRecoilValue } from "recoil";
 import { useEffect, useState } from "react";
-import { swtichName } from "../functions/switchName";
-import { selectedPointStore } from "../recoilContextProvider";
 import { usePathname } from "next/navigation";
+import { swtichName } from "../functions/switchName";
+import { CountType } from "../components/map/getCount";
+import { selectedPointStore } from "../recoilContextProvider";
 
-export default function Naviagator() {
+export default function Naviagator(props: {counts: CountType[]}) {
     const pathname = usePathname();
     const selectedPoint = useRecoilValue(selectedPointStore);
     const [displayPoint, setDisplayPoint] = useState("");
@@ -39,7 +40,7 @@ export default function Naviagator() {
     return (
         <div className={pathname === "/" ? containerStyle : `${containerStyle} mt-[15vh]`}>
             <div className={`flex flex-col scale-[0.9] opacity-0 ${openAnim}`}>
-                <Map isProfile={true} />
+                <Map counts={props.counts} />
                 <p className="text-white">
                     {displayPoint}
                 </p>

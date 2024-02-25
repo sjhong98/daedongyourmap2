@@ -8,12 +8,14 @@ import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { curPostStore, isPostViewOpenStore, PostType } from "../recoilContextProvider"
 import { updatePost } from "./updatePost";
+import { CountType } from "../components/map/getCount";
 
 interface Props {
     data: PostType[], 
     data2?: any, 
     location?: string
     email?: string,
+    counts: CountType[],
 }
 
 export default function PostBoard( props: Props ) {
@@ -30,10 +32,6 @@ export default function PostBoard( props: Props ) {
     let email: string;
     if(props.email) email = props.email;
     else email = "all";
-
-    useEffect(() => {
-        console.log("location, email : ", location, email);
-    }, [])
     
     // postView 열기
     const handleClickPost = (item:PostType, index:number) => {
@@ -93,7 +91,7 @@ export default function PostBoard( props: Props ) {
     return (
         <div className="flex flex-col">
             <div className="flex-row w-full">
-                <Naviagator />
+                <Naviagator counts={props.counts} />
                 <div className="grid grid-cols-3 gap-1 w-[50vw]">
                     { posts!==undefined && posts.map((item:PostType, index:number) => {
                         return (
