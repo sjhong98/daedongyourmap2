@@ -194,9 +194,12 @@ export const fetchPost = async (location: string, email:string, lastIndex?: numb
     data.map((elem: any) => {
         let item = elem.document;
         let curComments:any;
+        let tags: any;
         if(item) {
             if(item.fields.comments.arrayValue.values === undefined) curComments = [];
             else curComments = item.fields.comments.arrayValue.values;
+            if(item.fields.tags === undefined || item.fields.tags.arrayValue.values === undefined) tags = [];
+            else tags = item.fields.tags.arrayValue.values;
             item !== undefined && extract.push({
                 createTime: item.fields.createTime.doubleValue,
                 title: item.fields.title.stringValue,
@@ -207,6 +210,7 @@ export const fetchPost = async (location: string, email:string, lastIndex?: numb
                 comments: curComments,
                 name: item.name,
                 likes: item.fields.likes.arrayValue.values,
+                tags: tags
             });
         }
     });

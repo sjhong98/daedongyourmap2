@@ -6,7 +6,7 @@ import styled from 'styled-components';
 interface propsType {
     setState: Dispatch<SetStateAction<string>>
     state: string,
-    ph: string,
+    placeholder: string,
     type?: string
 }
 
@@ -14,7 +14,7 @@ export default function Input(props:propsType) {
 
     return (
         <InputComponent 
-            placeholder={props.ph} 
+            placeholder={props.placeholder} 
             onChange={(e)=>props.setState(e.target.value)} 
             value={props.state}
             type={props.type ? props.type : "text"}

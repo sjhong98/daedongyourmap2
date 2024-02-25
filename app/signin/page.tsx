@@ -65,12 +65,12 @@ export default function SignIn() {
                 <Input 
                     state={email} 
                     setState={setEmail} 
-                    ph="email" 
+                    placeholder="email" 
                 />
                 <Input 
                     state={pw} 
                     setState={setPw} 
-                    ph="password" 
+                    placeholder="password" 
                     type="password" 
                 />
                 <p className="text-sm text-red-500">{msg}</p>

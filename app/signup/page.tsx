@@ -77,11 +77,11 @@ export default function SignUp() {
             <div className="flex flex-col items-center bg-white shadow-2xl rounded-3xl w-[25vw] h-[60vh]">
                 <Image src={Logo} alt="logo" width={300} className="mt-12 mb-10" />
                 <p className="text-2xl mb-10 lml">Sign Up</p>
-                <Input state={email} setState={setEmail} ph="email" />
-                <Input state={pw} setState={setPw} ph="password" type="password" />
+                <Input state={email} setState={setEmail} placeholder="email" />
+                <Input state={pw} setState={setPw} placeholder="password" type="password" />
                 <p className="text-[0.7rem] text-gray-400 mt-[-1vh] mb-3">비밀번호 8자 이상</p>
-                <Input state={pwCheck} setState={setPwCheck} ph="password" type="password" />
-                <Input state={nickname} setState={setNickname} ph="nickname" />
+                <Input state={pwCheck} setState={setPwCheck} placeholder="password" type="password" />
+                <Input state={nickname} setState={setNickname} placeholder="nickname" />
                 <p className="text-sm text-red-500">{msg}</p>
                 <SignUpBtn variant="text" onClick={handleBtnClick} >sign up</SignUpBtn>
             </div>

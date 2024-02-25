@@ -3,10 +3,11 @@ export interface PropsType {
     content:string,
     idToken: string,
     selectedPoint: string,
+    tags: Array<string>
 }
 
 export async function UploadPost(props:PropsType) {
-    let {title, content, idToken, selectedPoint} = props;
+    let {title, content, idToken, selectedPoint, tags} = props;
     const email = localStorage.getItem('ddym-email');
     const data = {
         fields: {
@@ -18,7 +19,8 @@ export async function UploadPost(props:PropsType) {
             comments: { arrayValue: { values: [ ] }},
             likes: { arrayValue: { values: [ ] }},
             user: { stringValue: email },
-            createTime: { doubleValue: + new Date() }
+            createTime: { doubleValue: + new Date() },
+            tag: { arrayValue: { values: tags}}
         }
     }
     const res = await fetch('https://firestore.googleapis.com/v1/projects/daedongyourmap-ad63d/databases/(default)/documents/posts', {

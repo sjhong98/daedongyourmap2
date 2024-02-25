@@ -4,6 +4,7 @@ import InputImage from "./inputImage";
 import styled from "styled-components";
 import Loading from "../components/loading";
 import PointSelection from "./pointSelection";
+import CancelIcon from '@mui/icons-material/Cancel';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { UploadPost } from "@/app/create/uploadPost";
@@ -16,6 +17,8 @@ export default function Create() {
     const idToken = useRecoilValue(idTokenStore);
     const isLogin = useRecoilValue(isLoginStore);
     const setPostCreated = useSetRecoilState(postCreatedStore);
+    const [tag, setTag] = useState<string>("");
+    const [tags, setTags] = useState<{stringValue:string}[]>([]);
     const [image, setImage] = useState<any[]>([]);
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
@@ -32,9 +35,29 @@ export default function Create() {
         if(!isLogin) router.push(`/signin`);
     }, [])
 
+    const handleAddTag = () => {
+        let temp = [...tags];
+        let tempTag = { stringValue: tag }
+        temp.push(tempTag);
+        setTags(temp);
+        setTag("");
+    }
+
+    const handleDeleteTag = (index: number) => {
+        let temp = [...tags];
+        temp.splice(index, 1);
+        setTags(temp);
+    }
+
     const handleUploadPost = () => {
         // 게시물 저장 path 가져와 cloud path로 사용
-        UploadPost({title, content, idToken, selectedPoint})
+        UploadPost({
+            title, 
+            content, 
+            idToken, 
+            selectedPoint, 
+            tags
+        })
         .then((res) => {
             UploadImage(
                 image, 
@@ -52,10 +75,6 @@ export default function Create() {
         if(title !== "" && image.length > 0 && selectedPoint !== "") setReadyToUpload(true);
         else setReadyToUpload(false);
     }, [title, image])
-
-    useEffect(() => {
-        console.log("image : ", image);
-    }, [image])
     
     return (
         <div className="flex flex-col center bg-stone-800 rounded-2xl w-[40vw] min-h-[60vh] shadow-2xl nnl">
@@ -78,6 +97,40 @@ export default function Create() {
                 onChange={(e)=>setContent(e.target.value)} 
                 className={inputStyle}
             />
+            <div>
+                <Input 
+                    value={tag}
+                    placeholder="tag"
+                    onChange={(e)=>setTag(e.target.value)}
+                    className={inputStyle}
+                />
+                { tag === "" ?
+                    <></>
+                    :
+                    <Btn
+                        onClick={handleAddTag}
+                        className="lml rounded-md bg-white text-black w-[5vw] ml-[-5vw]"
+                    >
+                        Add
+                    </Btn>
+                }
+            </div>
+            <div className="flex flex-wrap w-[20vw] mt-[-1vh] mb-[2vh]">
+            { tags.map((item: {stringValue:string}, index: number) => {
+                return (
+                    <TagChip key={index}>
+                        <p id="tag">#{item.stringValue}</p>
+                        <div 
+                            id="remove-tag" 
+                            onClick={()=>handleDeleteTag(index)}
+                        >
+                            <CancelIcon />
+                        </div>
+                    </TagChip>
+                )
+            })
+            }
+            </div>
             { isLoading ? 
                 <></> 
                 : 
@@ -112,5 +165,33 @@ const Input = styled.input`
 const InputArea = styled.textarea`
     &:focus {
         outline: none;
+    }
+`
+
+const TagChip = styled.div`
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+    margin: 0.2vw;
+    margin-right: -1.4vw;
+    &:hover {
+        #remove-tag {
+            visibility: visible;
+        }
+        margin-right: 0vw;
+    }
+    #tag {
+        background-color: white;
+        border-radius: 0.3vw;
+        padding-left: 0.2vw;
+        padding-right: 0.2vw;
+        color:black;
+    }
+    #remove-tag {
+        visibility: hidden;
+        cursor: pointer;
+        &:active {
+            color: #222;
+        }
     }
 `

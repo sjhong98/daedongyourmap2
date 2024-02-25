@@ -5,8 +5,8 @@ import Naviagator from "./navigator";
 import styled from "styled-components";
 import { fetchPost } from "./fetchPost";
 import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import { curPostStore, isPostViewOpenStore, PostType } from "../recoilContextProvider"
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { curPostStore, isPostBoardStore, isPostViewOpenStore, PostType } from "../recoilContextProvider"
 import { updatePost } from "./updatePost";
 import { CountType } from "../components/map/getCount";
 
@@ -19,6 +19,7 @@ interface Props {
 }
 
 export default function PostBoard( props: Props ) {
+    const setIsPostBoard = useSetRecoilState(isPostBoardStore);
     const [target, setTarget] = useState<any>();
     const [curPost, setCurPost] = useRecoilState(curPostStore);
     const [curPostIndex, setCurPostIndex] = useState<number>(-1);
@@ -39,6 +40,10 @@ export default function PostBoard( props: Props ) {
         setCurPostIndex(index);
         setPostViewOpen(true);
     }
+
+    useEffect(() => {
+        setIsPostBoard(false);
+    }, [])
 
     useEffect(() => {
         // 해당 게시물 업데이트

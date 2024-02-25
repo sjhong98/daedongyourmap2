@@ -45,6 +45,7 @@ export default function SignInCheck() {
 
     useEffect(() => {
         // idToken 갱신
+        // ssr로 처리하고 싶으나, localStorage에 있는 refreshToken 사용해서 갱신해야 하므로 csr로 해야함.
         const refreshCount = async () => {
             const refreshToken = localStorage.getItem('ddym-refresh-token');
             const res = fetch(`https://securetoken.googleapis.com/v1/token?key=AIzaSyCA6Q_TA6dyl7wf2BtR_V_oEVIW2_Q94y0`, {

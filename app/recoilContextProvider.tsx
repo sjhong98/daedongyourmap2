@@ -22,6 +22,7 @@ export interface PostType {
     comments:Array<any>,
     name:string,
     likes:Array<any>,
+    tags:Array<string>
 }
 
 export interface ProfileType {
@@ -74,6 +75,11 @@ export const curPostStore = atom<PostType | null>({
 export const isPostViewOpenStore = atom<boolean>({
     key:'isPostViewOpen',
     default:false
+})
+
+export const isPostBoardStore = atom<boolean>({
+    key:'isPostBoardStore',
+    default: false
 })
 
 export default function RecoilContextProvider({children}: {children:React.ReactNode}) {

@@ -1,10 +1,10 @@
 "use client";
 
-import { useSetRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import Image, { StaticImageData } from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
-import { selectedPointStore } from '@/app/recoilContextProvider';
-import { useEffect, useState } from 'react';
+import { isPostBoardStore, selectedPointStore } from '@/app/recoilContextProvider';
 
 interface MapImagePropsType {
     src: StaticImageData;
@@ -17,8 +17,10 @@ interface MapImagePropsType {
 export default function MapImage(props:MapImagePropsType) {
     const router = useRouter();
     const pathName = usePathname();
-    const { src, alt, width, position, count } = props;
+    const splittedPath = pathName.split('/');
+    const isPostBoard = useRecoilValue(isPostBoardStore);
     const set = useSetRecoilState(selectedPointStore);
+    const { src, alt, width, position, count } = props;
     const [invertLevel, setInvertLevel] = useState<string>("");
 
     useEffect(() => {
@@ -36,8 +38,8 @@ export default function MapImage(props:MapImagePropsType) {
     }, [])
 
     const handleClick = (e:any) => {
-        if(pathName === "/") router.push(`/${e.target.alt}`);
-        else router.push(`${pathName}/${e.target.alt}`);
+        if(pathName === "/" && splittedPath[0] !== "profile") router.push(`/${e.target.alt}`);
+        else router.push(`/${splittedPath[1]}/${splittedPath[2]}/${e.target.alt}`);
     }
 
     const handleMouseOver = (e:any) => {
