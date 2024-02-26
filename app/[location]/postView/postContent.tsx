@@ -18,12 +18,16 @@ export default function PostContent(props:Prop) {
     const selectedPoint = useRecoilValue(selectedPointStore);
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
+    const [tags, setTags] = useState<{stringValue: string}[]>([]);
     const inputStyle = "text-black focus:outline-none rounded-md border-[1px] w-[12vw] p-2"
 
     useEffect(() => {
         if(post) {
             setTitle(post.title);
             setContent(post.content);
+            if(post?.tags === undefined) setTags([]);
+            else setTags(post.tags);
+            console.log("post : ", post);
         }
     }, [post])
 
@@ -46,6 +50,10 @@ export default function PostContent(props:Prop) {
             setIsModify(false);
         })
         .catch((err)=> console.log(err) );
+    }
+
+    const handleClickTag = (index: number) => {
+        console.log(post?.tags[index]);
     }
 
     return (
@@ -74,6 +82,21 @@ export default function PostContent(props:Prop) {
             <div>
                 <pre className="nnb">{title}</pre> 
                 <pre className="text-[0.8rem] nnn">{content}</pre>
+                <div className="flex flex-wrap">
+                { tags.map((item:{stringValue:string}, index:number) => {
+                    return (
+                        <p 
+                            key={index} 
+                            className="text-gray-400 text-[0.8rem] mr-1 cursor-pointer"
+                            onClick={()=>handleClickTag(index)}
+                        >
+                            #{item.stringValue}
+                        </p>
+                    )
+                })
+
+                }
+                </div>
             </div>
         }
         </div>

@@ -18,9 +18,8 @@ import { swtichName } from "@/app/functions/switchName";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { getProfile } from "@/app/functions/getProfile";
 import { UploadComment } from "./functions/uploadComment";
-import { curPostStore, idTokenStore, isPostViewOpenStore, postCreatedStore, selectedPointStore, userDataStore } from "../../recoilContextProvider";
 import { DeleteComment } from "./functions/deleteComment";
-
+import { curPostStore, idTokenStore, isPostViewOpenStore, postCreatedStore, selectedPointStore, userDataStore } from "../../recoilContextProvider";
 
 export interface userInfo {
     displayName: string,

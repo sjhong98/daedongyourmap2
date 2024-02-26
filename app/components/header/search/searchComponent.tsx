@@ -18,8 +18,9 @@ export default function SearchComponent() {
                 <SearchIcon />
                 <input 
                     value={keyword}
+                    placeholder='Search Tag'
                     onChange={(e)=>setKeyword(e.target.value)}
-                    className="bg-[#003545] nnl ml-2 w-[8vw] p-1 focus:outline-none focus:border-b-2"
+                    className="bg-transparent nnl ml-2 w-[8vw] p-1 focus:outline-none focus:border-b-2"
                 />
             </InputWrapper>
             { keyword === "" ?

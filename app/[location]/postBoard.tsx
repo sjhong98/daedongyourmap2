@@ -4,11 +4,11 @@ import Image from "next/image";
 import Naviagator from "./navigator";
 import styled from "styled-components";
 import { fetchPost } from "./fetchPost";
+import { updatePost } from "./updatePost";
 import { useEffect, useState } from "react";
+import { CountType } from "../components/map/getCount";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { curPostStore, isPostBoardStore, isPostViewOpenStore, PostType } from "../recoilContextProvider"
-import { updatePost } from "./updatePost";
-import { CountType } from "../components/map/getCount";
 
 interface Props {
     data: PostType[], 

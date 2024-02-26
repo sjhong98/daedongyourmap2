@@ -22,7 +22,7 @@ export interface PostType {
     comments:Array<any>,
     name:string,
     likes:Array<any>,
-    tags:Array<string>
+    tags:Array<{stringValue:string}>
 }
 
 export interface ProfileType {
